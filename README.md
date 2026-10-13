@@ -1,10 +1,10 @@
 # Clearer Days | Opella
 
-A phone-first pharmacy symptom check using the supplied Opella logo and fonts, dark green `#042B0B`, and warm cream `#F7EFE6`. A restrained animated wave leads into twelve focused questions, one at a time. The flat header gives the logo room; progress appears once the check begins. The app sits within 5% top and bottom viewport margins, and phone screens divide their content into equal upper and lower halves. Answer choices are large and descriptive. A result and optional pharmacist details follow. Desktop keeps the same journey and adds a progress panel. Motion can be turned off.
+A phone-first pharmacy symptom check using the supplied Opella logo and fonts, dark green `#042B0B`, and warm cream `#F7EFE6`. A restrained animated wave leads into twelve focused questions, one at a time. Answer choices are illustrated tiles with motion that reflects the symptom or air-quality clue; selection is shown with a clear border and background. The app sits within 5% top and bottom viewport margins, and phone screens divide their content into equal upper and lower halves. A result and optional pharmacist details follow. Desktop keeps the same journey and adds a progress panel. Motion can be turned off.
 
 ## Run locally
 
-Open `dist/index.html` in a browser, or serve `dist` with a static HTTP server. No build step, dependencies, account, or patient identifier is required. Answers stay in memory only and reset when the page reloads or **New check** is selected.
+Open `index.html` in a browser, or serve this directory with a static HTTP server. No build step, dependencies, account, or patient identifier is required. Answers stay in memory only and reset when the page reloads or **New check** is selected.
 
 ## Decision-support behavior
 
@@ -17,4 +17,4 @@ AQI is manual by user choice; no live data source is connected. The app does not
 
 ## Verify
 
-Run `node tests/logic.cjs` to check the four result paths and render the introduction, all questions, and both result views without browser dependencies.
+Run `node --check script.js` to check the script syntax. Check the tiles at phone and desktop sizes in a browser before publishing.
