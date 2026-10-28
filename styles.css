@@ -198,3 +198,25 @@ button:focus-visible{outline:3px solid #A5CD8E;outline-offset:2px}
   .answer-deck{padding:10px 13px}.why-note{display:none}
   .result-hero,.details-hero{padding:50px 13px 10px}.result-body,.details-body{padding:10px 13px}
 }
+
+/* Arabic reading order and glyph coverage */
+html[lang="ar"]{font-family:Tahoma,"Segoe UI",Arial,sans-serif}
+html[lang="ar"] .app{direction:rtl}
+html[lang="ar"] .choice{text-align:right}
+html[lang="ar"] .why-note{border-left:0;border-right:3px solid #407A49;padding:3px 10px 3px 0}
+html[lang="ar"] .overline,html[lang="ar"] .deck-heading,html[lang="ar"] .block-label,html[lang="ar"] .why-label,html[lang="ar"] .journey-meta,html[lang="ar"] .result-tag,html[lang="ar"] .rail-kicker,html[lang="ar"] .rail-meter>div:first-child,html[lang="ar"] .rail-current span{letter-spacing:0}
+html[lang="ar"] .intro-copy h1,html[lang="ar"] .question-copy h1,html[lang="ar"] .result-hero h1,html[lang="ar"] .details-hero h1,html[lang="ar"] .insight-rail h2{letter-spacing:0;line-height:1.18}
+html[lang="ar"] .choice strong{line-height:1.35}
+html[lang="ar"] .question-copy p,html[lang="ar"] .intro-copy p,html[lang="ar"] .result-hero p,html[lang="ar"] .details-hero p{line-height:1.5}
+html[lang="ar"] .next-step p,html[lang="ar"] .counsel-card p,html[lang="ar"] .why-note p{line-height:1.45}
+html[lang="ar"] .screen{overflow-y:auto;scrollbar-width:thin}
+html[lang="ar"] .screen>div{height:auto;min-height:100%}
+html[lang="ar"] .intro-screen{grid-template-rows:minmax(180px,1fr) minmax(250px,1fr)}
+html[lang="ar"] .question-screen{grid-template-rows:minmax(230px,1fr) minmax(340px,1fr)}
+html[lang="ar"] .result-screen{grid-template-rows:minmax(210px,1fr) minmax(300px,1fr)}
+html[lang="ar"] .details-screen{grid-template-rows:minmax(210px,1fr) minmax(390px,1fr)}
+html[lang="ar"] .detail-line{line-height:1.4}
+html[lang="ar"] .result-actions .primary-button,html[lang="ar"] .continue-button{white-space:nowrap}
+@media(max-width:800px) and (orientation:landscape) and (max-height:430px){
+  html[lang="ar"] .intro-screen,html[lang="ar"] .question-screen,html[lang="ar"] .result-screen,html[lang="ar"] .details-screen{grid-template-columns:1fr 1fr;grid-template-rows:minmax(290px,1fr)}
+}

@@ -1,26 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#042B0B">
-  <meta name="description" content="A bright, pharmacist-guided check for nose and allergy symptoms.">
-  <title>Opella_Pharmacist Allergic Rhinitis Diagnostic Kit Quiz</title>
-  <link rel="preload" href="assets/fonts/OpellaSansBETA-Regular.otf" as="font" type="font/otf" crossorigin>
+  <meta name="description" content="فحص لأعراض الأنف والحساسية بإرشاد الصيدلي.">
+  <title>فحص أعراض التهاب الأنف التحسسي | Opella</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <div class="app" id="app">
     <header class="topbar">
       <img class="opella-logo" src="assets/opella_logo.png" alt="Opella">
-      <button id="motion-toggle" class="motion-toggle" type="button" aria-label="Turn animations off" aria-pressed="false"><span class="motion-spark" aria-hidden="true">✦</span><span>Motion on</span></button>
+      <button id="motion-toggle" class="motion-toggle" type="button" aria-label="إيقاف الحركة" aria-pressed="false"><span class="motion-spark" aria-hidden="true">✦</span><span>الحركة مفعّلة</span></button>
     </header>
     <main class="workspace">
-      <section class="journey" aria-label="Symptom check">
-        <div class="journey-top"><div class="journey-meta"><span id="section-name">YOUR CHECK-IN</span><span id="progress-text">About 2 minutes</span></div><div id="progress-track" class="progress-track" aria-label="Quiz progress"></div></div>
+      <section class="journey" aria-label="فحص الأعراض">
+        <div class="journey-top"><div class="journey-meta"><span id="section-name">فحص الأعراض</span><span id="progress-text">نحو دقيقتين إلى 3 دقائق</span></div><div id="progress-track" class="progress-track" aria-label="تقدّم الفحص"></div></div>
         <div id="screen" class="screen" aria-live="polite"></div>
       </section>
-      <aside id="insight-rail" class="insight-rail" aria-label="Check-in guidance"></aside>
+      <aside id="insight-rail" class="insight-rail" aria-label="إرشادات الفحص"></aside>
     </main>
   </div>
   <script src="./script.js"></script>
