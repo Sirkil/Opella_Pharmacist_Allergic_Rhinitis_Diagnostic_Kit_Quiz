@@ -1,16 +1,11 @@
 const questions = [
-  { key:'watery', group:'الأعراض', eyebrow:'العلامة الأولى', title:'كيف تصف إفرازات الأنف؟', detail:'اختر الوصف الأقرب، ثم أجب لاحقًا عن الإفرازات السميكة أو الملوّنة إن وجدت.', options:[['watery','مائية وشفافة'],['cloudy','شفافة إلى معكّرة قليلًا'],['none','لا توجد إفرازات من هذين النوعين']], insight:'يميّز الدليل بين الإفرازات المائية الشفافة والإفرازات التي قد تصبح معكّرة قليلًا.' },
+  { key:'discharge', group:'الأعراض', eyebrow:'نوع الإفرازات', title:'كيف تصف إفرازات الأنف؟', detail:'اختر وصفًا واحدًا هو الأقرب لما تلاحظه.', options:[['watery','مائية وشفافة'],['cloudy','شفافة إلى معكّرة قليلًا'],['thick','سميكة صفراء أو خضراء'],['none','لا توجد إفرازات']], insight:'نوع الإفرازات من العلامات التي تفرّق بين المسارات، لكنه لا يكفي وحده لتشخيص السبب.' },
   { key:'itch', group:'الأعراض', eyebrow:'علامة الحكّة', title:'هل تشعر بحكّة في الأنف أو العينين أو الحلق؟', detail:'يشمل ذلك الشعور بالدغدغة أو الرغبة في الفرك.', options:[['yes','نعم، توجد حكّة'],['no','لا توجد حكّة']], insight:'الحكّة مع سيلان الأنف المائي من العلامات التي قد ترجّح الحساسية.' },
   { key:'sneeze', group:'الأعراض', eyebrow:'علامة العطس', title:'كيف يحدث العطس لديك؟', detail:'اختر نوبات متتالية فقط إذا كان العطس يأتي في سلسلة واضحة.', options:[['bouts','نوبات متتالية'],['yes','يوجد عطس دون نوبات متتالية'],['no','لا يوجد عطس']], insight:'يميّز الدليل بين العطس ونوبات العطس المتتالية عند تحديد المسار.' },
-  { key:'blocked', group:'الأعراض', eyebrow:'علامة الاحتقان', title:'هل تشعر بانسداد أو احتقان في الأنف؟', detail:'فكّر في مدى سهولة التنفس عبر الأنف.', options:[['yes','نعم، يوجد احتقان'],['no','لا، التنفس طبيعي']], insight:'يساعد الاحتقان على فهم نمط الأعراض، لكنه لا يحدد السبب بمفرده.' },
-  { key:'malaise', group:'الأعراض', eyebrow:'الشعور العام', title:'هل تشعر بتوعّك خفيف؟', detail:'مثل تعب بسيط أو شعور عام بأنك لست على ما يرام.', options:[['yes','نعم، توعّك خفيف'],['no','لا، أشعر أنني بخير']], insight:'قد يصاحب التوعّك الخفيف نزلة البرد، لكنه علامة مساعدة وليست تشخيصًا.' },
-  { key:'fever', group:'علامات تستدعي المراجعة', eyebrow:'فحص سريع', title:'هل لديك حمّى؟', detail:'وجود حرارة مرتفعة يستدعي مناقشة الأعراض مع الصيدلي.', options:[['yes','نعم، لديّ حمّى'],['no','لا توجد حمّى']], insight:'وجود حمّى يستدعي تقييمًا أقرب من الصيدلي.' },
-  { key:'thick', group:'علامات تستدعي المراجعة', eyebrow:'فحص سريع', title:'هل الإفرازات سميكة وصفراء أو خضراء؟', detail:'تختلف هذه الإفرازات عن سيلان الأنف الخفيف والشفاف.', options:[['yes','نعم، سميكة أو ملوّنة'],['no','لا']], insight:'تستدعي هذه الإجابة مراجعة الأعراض كاملة، ولا تكفي وحدها لتشخيص عدوى بكتيرية.' },
-  { key:'pain', group:'علامات تستدعي المراجعة', eyebrow:'فحص سريع', title:'هل تشعر بألم في الوجه أو ضغط في الجيوب الأنفية؟', detail:'مثل ألم حول الخدين أو العينين أو الجبهة.', options:[['yes','نعم، ألم أو ضغط'],['no','لا يوجد ألم']], insight:'ألم الوجه سبب لمناقشة الخطوة الأنسب مع الصيدلي.' },
+  { key:'coldSigns', group:'الأعراض', eyebrow:'الاحتقان والشعور العام', title:'هل لديك احتقان في الأنف أو توعّك خفيف؟', detail:'اختر الخيار الذي يصف العلامتين معًا.', options:[['both','احتقان وتوعّك خفيف'],['blocked','احتقان فقط'],['malaise','توعّك خفيف فقط'],['none','لا توجد أي منهما']], insight:'يجمع مسار نزلة البرد بين الاحتقان والتوعّك الخفيف.' },
+  { key:'warningSigns', group:'علامات تستدعي المراجعة', eyebrow:'الحمّى وألم الوجه', title:'هل لديك حمّى أو ألم أو ضغط في الوجه؟', detail:'اختر الخيار الذي يصف العلامتين معًا.', options:[['both','حمّى وألم أو ضغط في الوجه'],['fever','حمّى فقط'],['pain','ألم أو ضغط في الوجه فقط'],['none','لا توجد أي منهما']], insight:'ناقش أيًّا من هاتين العلامتين مع الصيدلي، حتى لو لم يكتمل مسار الإحالة.' },
   { key:'duration', group:'علامات تستدعي المراجعة', eyebrow:'مدة الأعراض', title:'منذ متى بدأت الأعراض؟', detail:'اختر المدة الأقرب.', options:[['short','أقل من 7 أيام'],['typical','من 7 إلى 10 أيام'],['medium','من 11 إلى 14 يومًا'],['long','أكثر من 14 يومًا'],['unknown','لا أعرف']], insight:'تساعد المدة على مطابقة المسار المحدد في الدليل. ناقش استمرار الأعراض مع الصيدلي.' },
-  { key:'pollution', group:'الهواء والمحفزات', eyebrow:'تأثير الهواء', title:'هل تسوء الأعراض في أيام ارتفاع التلوّث؟', detail:'مثل الأيام التي يكثر فيها الضباب الدخاني أو الدخان.', options:[['yes','نعم، تسوء الأعراض'],['no','لا ألاحظ ارتباطًا'],['unsure','لست متأكدًا']], insight:'ملاحظتك مفيدة لفهم المحفزات، لكن جودة الهواء وحدها لا تشخّص الحساسية.' },
-  { key:'aqi', group:'الهواء والمحفزات', eyebrow:'قراءة جودة الهواء', title:'ما نطاق مؤشر جودة الهواء المحلي اليوم (AQI)؟', detail:'اختر النطاق من تقرير جودة الهواء المحلي، أو اختر «لا أعرف».', options:[['good','<bdi dir="ltr">0–50</bdi> · جيد'],['moderate','<bdi dir="ltr">51–100</bdi> · متوسط'],['sensitive','<bdi dir="ltr">101–150</bdi> · غير صحي للفئات الحساسة'],['unhealthy','<bdi dir="ltr">151+</bdi> · غير صحي'],['unknown','لا أعرف']], insight:'المؤشر فوق 100 غير صحي أولًا للفئات الحساسة. يعتمد هذا الفحص على النطاق الذي تختاره، وليس على قراءة مباشرة.' },
-  { key:'alignment', group:'الهواء والمحفزات', eyebrow:'ارتباط الهواء بالأعراض', title:'هل تتوافق قراءة الهواء اليوم مع شدة أعراضك؟', detail:'مثلًا، هل تسوء الأعراض عندما تكون جودة الهواء منخفضة؟', options:[['yes','نعم، يبدو أنها تتوافق'],['no','لا ألاحظ توافقًا'],['unsure','لست متأكدًا']], insight:'قد يساعد التوافق الصيدلي في مناقشة المحفزات، لكن قراءة يوم واحد لا تثبت سبب الأعراض.' }
+  { key:'air', group:'الهواء والمحفزات', eyebrow:'الهواء والأعراض', title:'ما قراءة مؤشر الهواء (AQI)، وهل تسوء الأعراض مع التلوّث؟', detail:'استخدم القراءة المحلية إن عرفتها، واختر «لا أعرف» إن لم تعرف.', options:[['linked_sensitive','<bdi dir="ltr">101–150</bdi> وتسوء الأعراض'],['linked_unhealthy','<bdi dir="ltr">151+</bdi> وتسوء الأعراض'],['high_unlinked','المؤشر فوق 100 دون ارتباط واضح'],['not_high','المؤشر 100 أو أقل'],['unknown','لا أعرف القراءة أو الارتباط']], insight:'يتطلب مسار الحساسية المرتبطة بالتلوّث قراءة أعلى من 100 مع تفاقم ملحوظ للأعراض.' }
 ];
 const state = {
   index:-1,
@@ -21,38 +16,40 @@ const state = {
 const app=document.getElementById('app');
 const screen=document.getElementById('screen');
 const rail=document.getElementById('insight-rail');
-function yes(key){return state.answers[key]==='yes';}
 function safetyFlags(){
+  const a=state.answers;
   const flags=[];
-  if(yes('fever'))flags.push('حمّى');
-  if(yes('thick'))flags.push('إفرازات سميكة صفراء أو خضراء');
-  if(yes('pain'))flags.push('ألم أو ضغط في الوجه');
-  if(state.answers.duration==='long')flags.push('أعراض مستمرة لأكثر من 14 يومًا');
+  if(['fever','both'].includes(a.warningSigns))flags.push('حمّى');
+  if(a.discharge==='thick')flags.push('إفرازات سميكة صفراء أو خضراء');
+  if(['pain','both'].includes(a.warningSigns))flags.push('ألم أو ضغط في الوجه');
+  if(a.duration==='long')flags.push('أعراض مستمرة لأكثر من 14 يومًا');
   return flags;
 }
-// Each entry fixes every answer. A separate entry is needed for each accepted AQI range.
-const trackPatterns=[
-  {type:'referral',answers:{watery:'none',itch:'no',sneeze:'no',blocked:'no',malaise:'no',fever:'yes',thick:'yes',pain:'yes',duration:'long',pollution:'no',aqi:'unknown',alignment:'no'}},
-  {type:'allergy',answers:{watery:'watery',itch:'yes',sneeze:'bouts',blocked:'no',malaise:'no',fever:'no',thick:'no',pain:'no',duration:'unknown',pollution:'yes',aqi:'sensitive',alignment:'yes'}},
-  {type:'allergy',answers:{watery:'watery',itch:'yes',sneeze:'bouts',blocked:'no',malaise:'no',fever:'no',thick:'no',pain:'no',duration:'unknown',pollution:'yes',aqi:'unhealthy',alignment:'yes'}},
-  {type:'cold',answers:{watery:'cloudy',itch:'no',sneeze:'yes',blocked:'yes',malaise:'yes',fever:'no',thick:'no',pain:'no',duration:'typical',pollution:'no',aqi:'good',alignment:'no'}}
+const trackRules=[
+  {type:'allergy',required:{discharge:'watery',itch:'yes',sneeze:'bouts',warningSigns:'none',air:['linked_sensitive','linked_unhealthy']}},
+  {type:'cold',required:{discharge:['watery','cloudy'],sneeze:['yes','bouts'],coldSigns:'both',duration:'typical'}},
+  {type:'referral',required:{discharge:'thick',warningSigns:'both',duration:'long'}}
 ];
-function exactTrack(type,answers){return trackPatterns.some(pattern=>pattern.type===type&&questions.every(q=>answers[q.key]===pattern.answers[q.key]));}
+function matchesTrack(rule,a){
+  return Object.entries(rule.required).every(([key,value])=>Array.isArray(value)?value.includes(a[key]):a[key]===value);
+}
 function review(reason){
   const flags=safetyFlags();
-  return {type:'review',tag:'مسار غير محدد',title:'لا يوجد تطابق تام',summary:'لا تطابق إجاباتك مجموعة كاملة من الإجابات المحددة لأي مسار.',evidence:flags.length?['لم تكتمل شروط أي مسار',...flags]:[reason],next:flags.length?'ذكرتَ علامة قد تستدعي التقييم. ناقشها مع الصيدلي حتى لو لم يطابق مجموع إجاباتك مسار الإحالة المحدد.':'راجع إجاباتك مع الصيدلي قبل اختيار الرعاية المناسبة.',reason};
+  return {type:'review',tag:'مسار غير محدد',title:'لم يُحدَّد مسار',summary:'العلامات غير مكتملة أو تشير إلى أكثر من مسار، لذا لا يمكن تحديد مسار واحد.',evidence:flags.length?['لم تكتمل شروط أي مسار',...flags]:[reason],next:flags.length?'ذكرتَ علامة قد تستدعي التقييم. ناقشها مع الصيدلي حتى لو لم يكتمل مسار الإحالة.':'راجع إجاباتك مع الصيدلي قبل اختيار الرعاية المناسبة.',reason};
 }
 function classify(){
   const a=state.answers;
   if(questions.some(q=>a[q.key]===null))return review('بعض إجابات الأعراض أو علامات الإنذار أو جودة الهواء غير مكتملة.');
-  if(exactTrack('referral',a))return {type:'referral',tag:'تقييم الإحالة',title:'تحتاج الأعراض إلى تقييم أقرب',summary:'تطابقت جميع إجاباتك مع نمط الإحالة المحدد في هذا الفحص.',evidence:safetyFlags(),next:'اعرض هذه العلامات على الصيدلي لتقييم الحاجة إلى الإحالة للطبيب أو الأخصائي.',reason:'تطابقت الإجابات الاثنتا عشرة مع نمط الإحالة المحدد، بما في ذلك الحمى والإفرازات السميكة وألم الوجه واستمرار الأعراض لأكثر من 14 يومًا. هذه النتيجة لا تشخّص عدوى بكتيرية.'};
-  if(exactTrack('allergy',a))return {type:'allergy',tag:'نمط حساسية مع مؤشر هواء مرتفع',title:'تظهر عدة علامات ترجّح الحساسية',summary:'تطابقت جميع إجاباتك مع نمط الحساسية المرتبطة بتراجع جودة الهواء.',evidence:['سيلان أنف مائي وشفاف','حكّة','نوبات عطس متتالية','مؤشر الهواء أعلى من 100','ارتباط ملحوظ بجودة الهواء'],next:'اسأل الصيدلي عن تقليل التعرض للمحفزات والعناية المناسبة للحساسية.',reason:'تطابقت الإجابات الاثنتا عشرة مع أحد نمطي الحساسية المحددين؛ يختلف النمطان فقط في نطاق مؤشر جودة الهواء الأعلى من 100.'};
-  if(exactTrack('cold',a))return {type:'cold',tag:'نمط قد يشير إلى نزلة برد',title:'قد تكون الأعراض نزلة برد',summary:'تطابقت جميع إجاباتك مع نمط نزلة البرد المحدد في هذا الفحص.',evidence:['إفرازات شفافة إلى معكّرة قليلًا','عطس','احتقان','توعّك خفيف','مدة من 7 إلى 10 أيام'],next:'ناقش مع الصيدلي طرق تخفيف الأعراض ومتى تحتاج إلى رعاية إضافية.',reason:'تطابقت الإجابات الاثنتا عشرة مع نمط نزلة البرد المحدد، بما في ذلك نوع الإفرازات والعطس والاحتقان والتوعّك والمدة.'};
-  return review('لا تطابق الإجابات أي نمط كامل محدد لهذا الفحص.');
+  const matched=trackRules.filter(rule=>matchesTrack(rule,a));
+  if(matched.length!==1)return review('لا تكتمل شروط مسار واحد أو تظهر علامات من مسارات مختلفة.');
+  if(matched[0].type!=='referral'&&safetyFlags().length)return review('توجد علامة تستدعي المراجعة مع إجابات مسار آخر.');
+  if(matched[0].type==='referral')return {type:'referral',tag:'أنت في المسار ج',title:'عدوى (التهاب الجيوب البكتيري) · إحالة',summary:'هذا اسم المسار في الدليل، وليس تشخيصًا. تطابقت علامات الإحالة الأربع ويحتاج تحديد السبب إلى تقييم مهني.',evidence:safetyFlags(),next:'اعرض هذه العلامات على الصيدلي لتقييم الحاجة إلى الإحالة للطبيب أو الأخصائي.',reason:'اجتمعت الحمى والإفرازات السميكة وألم الوجه واستمرار الأعراض لأكثر من 14 يومًا. هذه النتيجة لا تشخّص عدوى بكتيرية.'};
+  if(matched[0].type==='allergy')return {type:'allergy',tag:'أنت في المسار أ',title:'حساسية تتفاقم بسبب التلوّث',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['سيلان أنف مائي وشفاف','حكّة','نوبات عطس متتالية','مؤشر الهواء أعلى من 100','ارتباط ملحوظ بجودة الهواء'],next:'اسأل الصيدلي عن تقليل التعرض للمحفزات والعناية المناسبة للحساسية.',reason:'اجتمعت الإفرازات المائية والحكّة ونوبات العطس وعدم وجود حمّى ومؤشر هواء أعلى من 100 وارتباط الأعراض بالتلوّث. بقية الإجابات لا تغيّر المسار ما لم تكتمل شروط مسار آخر أو تظهر علامة إنذار.'};
+  return {type:'cold',tag:'أنت في المسار ب',title:'نزلة برد / عدوى فيروسية',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['إفرازات شفافة إلى معكّرة قليلًا','عطس','احتقان','توعّك خفيف','مدة من 7 إلى 10 أيام'],next:'ناقش مع الصيدلي طرق تخفيف الأعراض ومتى تحتاج إلى رعاية إضافية.',reason:'اجتمعت الإفرازات الشفافة إلى المعكّرة قليلًا والعطس والاحتقان والتوعّك ومدة من 7 إلى 10 أيام. بقية الإجابات لا تغيّر المسار ما لم تكتمل شروط مسار آخر أو تظهر علامة إنذار.'};
 }
 function answeredCount(){return questions.filter(q=>state.answers[q.key]!==null).length;}
 function introScreen(){
-  return `<div class="intro-screen"><div class="intro-visual" aria-hidden="true"><div class="visual-disc"><svg viewBox="0 0 240 200" fill="none"><path d="M22 80c34-38 62-38 96 0s62 38 100 0"/><path d="M22 118c34-38 62-38 96 0s62 38 100 0"/><path d="M22 156c34-38 62-38 96 0s62 38 100 0"/></svg></div></div><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي في دقيقتين إلى 3 دقائق</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><p class="trust-note">هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p><button class="primary-button start-button" type="button" data-action="start">ابدأ الفحص <span aria-hidden="true">←</span></button></div></div></div>`;
+  return `<div class="intro-screen"><div class="intro-visual" aria-hidden="true"><div class="visual-disc"><svg viewBox="0 0 240 200" fill="none"><path d="M22 80c34-38 62-38 96 0s62 38 100 0"/><path d="M22 118c34-38 62-38 96 0s62 38 100 0"/><path d="M22 156c34-38 62-38 96 0s62 38 100 0"/></svg></div></div><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي قصير</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><p class="trust-note">هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p><button class="primary-button start-button" type="button" data-action="start">ابدأ الفحص <span aria-hidden="true">←</span></button></div></div></div>`;
 }
 const iconPaths={
   watery:'<path d="M12 2.5C9.3 6.2 5.5 10.2 5.5 14a6.5 6.5 0 0 0 13 0c0-3.8-3.8-7.8-6.5-11.5Z"/><path d="M9 15c.2 1.4 1.1 2.3 2.3 2.6"/>',
@@ -76,36 +73,47 @@ const iconPaths={
   unhealthy:'<path d="M5 16h13a3 3 0 0 0 .2-6A6 6 0 0 0 7 8a4 4 0 0 0-2 8ZM4 20h16M12 11v3m0 2h.01"/>',
   unknown:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.7 2.7 0 0 1 5.1 1.3c0 1.7-2.6 2-2.6 4M12 18h.01"/>'
 };
-const questionTones={watery:'aqua',itch:'lilac',sneeze:'peach',blocked:'mint',malaise:'lilac',fever:'coral',thick:'peach',pain:'coral',duration:'aqua',pollution:'lilac',alignment:'mint'};
+const questionTones={discharge:'aqua',itch:'lilac',sneeze:'peach',coldSigns:'mint',warningSigns:'coral',duration:'aqua',air:'lilac'};
 function tileIcon(key,option){
-  const icon=key==='aqi'?({good:'sun',moderate:'moderate',sensitive:'sensitive',unhealthy:'unhealthy',unknown:'unknown'}[option]):option==='unsure'?'unknown':key==='pollution'&&option==='no'?'sun':key==='malaise'&&option==='no'?'well':key==='alignment'&&option==='no'?'mismatch':key==='duration'&&option==='medium'?'calendar':key==='duration'&&option==='long'?'calendarLong':key;
-  const crossed=option==='no'&&!['malaise','duration','pollution','alignment'].includes(key);
+  const icons={
+    discharge:{watery:'watery',cloudy:'watery',thick:'thick',none:'well'},
+    itch:{yes:'itch',no:'itch'},
+    sneeze:{bouts:'sneeze',yes:'sneeze',no:'sneeze'},
+    coldSigns:{both:'blocked',blocked:'blocked',malaise:'malaise',none:'well'},
+    warningSigns:{both:'fever',fever:'fever',pain:'pain',none:'well'},
+    duration:{short:'duration',typical:'calendar',medium:'calendar',long:'calendarLong',unknown:'unknown'},
+    air:{linked_sensitive:'sensitive',linked_unhealthy:'unhealthy',high_unlinked:'moderate',not_high:'sun',unknown:'unknown'}
+  };
+  const icon=icons[key][option];
+  const crossed=option==='no';
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[icon]}${crossed?'<path class="icon-strike" d="M4 20 20 4"/>':''}</svg>`;
 }
 function tileTone(key,option,index){
-  return key==='aqi'?['mint','aqua','peach','coral','lilac'][index]:option==='unsure'?'lilac':questionTones[key];
+  return key==='air'?['peach','coral','aqua','mint','lilac'][index]:key==='warningSigns'&&option==='none'?'mint':questionTones[key];
 }
 function questionScreen(){
   const q=questions[state.index];
   const value=state.answers[q.key];
   const choices=q.options.map(([option,label],index)=>`<button type="button" data-value="${option}" data-key="${q.key}" data-tone="${tileTone(q.key,option,index)}" class="choice ${value===option?'selected':''}" aria-pressed="${value===option}"><span class="choice-icon" aria-hidden="true">${tileIcon(q.key,option)}</span><strong>${label}</strong></button>`).join('');
-  return `<div class="question-screen"><div class="question-stage"><span class="question-number" aria-hidden="true">${String(state.index+1).padStart(2,'0')}</span><div class="question-copy"><span class="overline">${q.eyebrow}</span><h1>${q.title}</h1><p>${q.detail}</p></div></div><div class="answer-deck"><div class="deck-heading"><span>إجابتك</span><span><bdi>${String(state.index+1).padStart(2,'0')} / ${questions.length}</bdi></span></div><div class="choices ${q.options.length===5?'five':q.options.length===3?'three':''}" role="group" aria-label="${q.title}">${choices}</div><div class="why-note"><span class="why-label">لماذا يهم هذا؟</span><p>${q.insight}</p></div><div class="question-nav"><button class="text-button" type="button" data-action="back">→ ${state.index===0?'المقدمة':'السؤال السابق'}</button><button class="primary-button continue-button" type="button" data-action="next" ${value===null?'disabled':''}>${state.index===questions.length-1?'عرض الملخص':'السؤال التالي'} <span aria-hidden="true">←</span></button></div></div></div>`;
+  return `<div class="question-screen"><div class="question-stage"><span class="question-number" aria-hidden="true">${String(state.index+1).padStart(2,'0')}</span><div class="question-copy"><span class="overline">${q.eyebrow}</span><h1>${q.title}</h1><p>${q.detail}</p></div></div><div class="answer-deck"><div class="deck-heading"><span>إجابتك</span><span><bdi>${String(state.index+1).padStart(2,'0')} / ${questions.length}</bdi></span></div><div class="choices ${q.options.length===5?'five':q.options.length===4?'four':q.options.length===3?'three':''}" role="group" aria-label="${q.title}">${choices}</div><div class="why-note"><span class="why-label">لماذا يهم هذا؟</span><p>${q.insight}</p></div><div class="question-nav"><button class="text-button" type="button" data-action="back">→ ${state.index===0?'المقدمة':'السؤال السابق'}</button><button class="primary-button continue-button" type="button" data-action="next" ${value===null?'disabled':''}>${state.index===questions.length-1?'عرض الملخص':'السؤال التالي'} <span aria-hidden="true">←</span></button></div></div></div>`;
 }
 function resultScreen(){
   const r=classify();
   if(state.details)return detailsScreen(r);
-  return `<div class="result-screen ${r.type}"><div class="result-hero"><span class="overline">نتيجة الفحص</span><span class="result-tag">${r.tag}</span><h1>${r.title}</h1><p>${r.summary}</p></div><div class="result-body"><div class="result-block"><span class="block-label">العلامات المهمة</span><div class="evidence-list">${r.evidence.map(x=>`<span>${x}</span>`).join('')}</div></div><div class="result-block next-step"><span class="block-label">الخطوة التالية</span><p>${r.next}</p></div><div class="result-disclaimer">يساعد هذا الفحص في الحوار مع الصيدلي، ولا يُعد تشخيصًا أو وصفة علاجية.</div><div class="result-actions"><button class="text-button" type="button" data-action="edit">→ تعديل الإجابات</button><button class="primary-button" type="button" data-action="details">تفاصيل للصيدلي <span aria-hidden="true">←</span></button></div></div></div>`;
+  return `<div class="result-screen ${r.type}"><div class="result-hero"><span class="overline">نتيجة الفحص</span><span class="result-tag">${r.tag}</span><h1>${r.title}</h1><p>${r.summary}</p></div><div class="result-body"><div class="result-block next-step"><span class="block-label">الخطوة التالية</span><p>${r.next}</p></div><div class="result-disclaimer">يساعد هذا الفحص في الحوار مع الصيدلي، ولا يُعد تشخيصًا أو وصفة علاجية.</div><div class="result-actions"><button class="text-button" type="button" data-action="edit">→ تعديل الإجابات</button><button class="primary-button" type="button" data-action="details">تفاصيل للصيدلي <span aria-hidden="true">←</span></button></div></div></div>`;
 }
 function detailsScreen(r){
   const a=state.answers;
   const duration={short:'أقل من 7 أيام',typical:'من 7 إلى 10 أيام',medium:'من 11 إلى 14 يومًا',long:'أكثر من 14 يومًا',unknown:'غير معروف'}[a.duration]||'غير معروف';
-  const aqi={good:'0–50',moderate:'51–100',sensitive:'101–150',unhealthy:'151 فأكثر',unknown:'غير معروف'}[a.aqi]||'غير معروف';
-  const discharge={watery:'مائية وشفافة',cloudy:'شفافة إلى معكّرة قليلًا',none:'لا توجد إفرازات من هذين النوعين'}[a.watery]||'غير معروف';
+  const discharge={watery:'مائية وشفافة',cloudy:'شفافة إلى معكّرة قليلًا',thick:'سميكة صفراء أو خضراء',none:'لا توجد إفرازات'}[a.discharge]||'غير معروف';
   const sneeze={bouts:'نوبات متتالية',yes:'يوجد عطس',no:'لا يوجد عطس'}[a.sneeze]||'غير معروف';
+  const coldSigns={both:'احتقان وتوعّك',blocked:'احتقان فقط',malaise:'توعّك فقط',none:'لا توجد أي منهما'}[a.coldSigns]||'غير معروف';
+  const warningSigns={both:'حمّى وألم بالوجه',fever:'حمّى فقط',pain:'ألم بالوجه فقط',none:'لا توجد أي منهما'}[a.warningSigns]||'غير معروف';
+  const air={linked_sensitive:'101–150 مع تفاقم الأعراض',linked_unhealthy:'151 فأكثر مع تفاقم الأعراض',high_unlinked:'أعلى من 100 دون ارتباط واضح',not_high:'100 أو أقل',unknown:'غير معروف'}[a.air]||'غير معروف';
   const line=(label,value,active)=>`<div class="detail-line ${active?'active':''}"><strong>${label}</strong><span>${value}</span></div>`;
-  const answer=value=>({yes:'نعم',no:'لا',unsure:'غير متأكد',null:'غير معروف'})[value]||'غير معروف';
+  const answer=value=>({yes:'نعم',no:'لا'})[value]||'غير معروف';
   const counsel=r.type==='allergy'?'قيّم ملاءمة العلاج. قد يكون مضاد الهيستامين، مثل فيكسوفينادين، خيارًا بعد مراجعة العمر والنشرة المحلية وموانع الاستعمال.':r.type==='cold'?'ناقش تخفيف الأعراض والراحة وشرب السوائل والمتابعة إذا استمرت الأعراض أو ساءت.':r.type==='referral'?'قيّم الحاجة إلى الإحالة وفق التاريخ المرضي الكامل والإرشادات المحلية. المخاط الملوّن وحده لا يثبت وجود عدوى بكتيرية أو الحاجة إلى مضاد حيوي.':'وضّح الإجابات غير المؤكدة وفكّر في الأسباب الأخرى قبل اقتراح الرعاية.';
-  return `<div class="details-screen"><div class="details-hero"><span class="overline">دعم قرار الصيدلي</span><h1>لماذا ظهر هذا المسار؟</h1><p>${r.reason}</p></div><div class="details-body"><div class="detail-list"><span class="block-label">مراجعة المسارات بالترتيب</span>${line('01 · علامات الإنذار',safetyFlags().length?safetyFlags().join(' · '):`لا توجد علامات إنذار مذكورة · ${duration}`,r.type==='referral'||(r.type==='review'&&safetyFlags().length>0))}${line('02 · الحساسية والهواء',`الإفرازات: ${discharge} · حكّة: ${answer(a.itch)} · AQI: ${aqi} · ارتباط بالتلوّث: ${answer(a.pollution)}`,r.type==='allergy')}${line('03 · نزلة البرد',`عطس: ${sneeze} · احتقان: ${answer(a.blocked)} · توعّك: ${answer(a.malaise)} · المدة: ${duration}`,r.type==='cold')}${line('04 · مسار غير محدد','لا توجد إجابات تطابق نمطًا كاملًا',r.type==='review')}</div><div class="counsel-card"><span class="block-label">إرشاد للصيدلي</span><p>${counsel}</p></div><div class="result-actions"><button class="text-button" type="button" data-action="summary">→ الملخص</button><button class="primary-button" type="button" data-action="reset">فحص جديد <span aria-hidden="true">↖</span></button></div></div></div>`;
+  return `<div class="details-screen"><div class="details-hero"><span class="overline">دعم قرار الصيدلي</span><h1>${r.type==='review'?'لماذا لم يُحدَّد مسار؟':'لماذا ظهر هذا المسار؟'}</h1><p>${r.reason}</p></div><div class="details-body"><div class="detail-list"><span class="block-label">مراجعة المسارات</span>${line('01 · علامات الإنذار',safetyFlags().length?safetyFlags().join(' · '):`لا توجد علامات إنذار مذكورة · ${warningSigns} · ${duration}`,r.type==='referral'||(r.type==='review'&&safetyFlags().length>0))}${line('02 · الحساسية والهواء',`الإفرازات: ${discharge} · حكّة: ${answer(a.itch)} · عطس: ${sneeze} · AQI: ${air}`,r.type==='allergy')}${line('03 · نزلة البرد',`الإفرازات: ${discharge} · عطس: ${sneeze} · ${coldSigns} · المدة: ${duration}`,r.type==='cold')}${line('04 · مسار غير محدد','شروط غير مكتملة أو علامات من مسارات مختلفة',r.type==='review')}</div><div class="counsel-card"><span class="block-label">إرشاد للصيدلي</span><p>${counsel}</p></div><div class="result-actions"><button class="text-button" type="button" data-action="summary">→ الملخص</button><button class="primary-button" type="button" data-action="reset">فحص جديد <span aria-hidden="true">↖</span></button></div></div></div>`;
 }
 function renderRail(){
   const count=answeredCount();
@@ -118,7 +126,7 @@ function render(){
   app.classList.toggle('is-intro',intro);
   const section=intro?'فحص الأعراض':done?'ملخص الفحص':questions[state.index].group;
   document.getElementById('section-name').textContent=section;
-  document.getElementById('progress-text').textContent=intro?'نحو دقيقتين إلى 3 دقائق':done?'اكتمل الفحص':`السؤال ${state.index+1} من ${questions.length}`;
+  document.getElementById('progress-text').textContent=intro?'7 أسئلة قصيرة':done?'اكتمل الفحص':`السؤال ${state.index+1} من ${questions.length}`;
   document.getElementById('progress-track').innerHTML=questions.map((_,i)=>`<span class="${done||i<state.index?'complete':i===state.index?'current':''}"></span>`).join('');
   screen.innerHTML=intro?introScreen():done?resultScreen():questionScreen();
   rail.innerHTML=renderRail();

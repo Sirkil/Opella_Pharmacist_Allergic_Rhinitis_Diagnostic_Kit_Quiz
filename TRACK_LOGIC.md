@@ -1,22 +1,13 @@
-# Exact quiz tracks
+# Seven-question quiz and track rules
 
-The quiz has 12 answers. A track appears only when every answer matches one complete pattern below. Any other complete answer set is **undefined** (`review` in the code). Incomplete answers are also undefined.
+The quiz now asks about nasal discharge, itching, sneezing, congestion with mild malaise, fever with facial pain, duration, and AQI with symptom worsening. The combined choices preserve the signs used by the three tracks without making the user answer 12 separate questions.
 
-| Question | Allergy and high AQI | Cold | Referral pattern |
-| --- | --- | --- | --- |
-| Nasal discharge | Watery and clear | Clear to slightly cloudy | Neither of those |
-| Itching | Yes | No | No |
-| Sneezing | Repeated bouts | Sneezing without repeated bouts | No |
-| Nasal congestion | No | Yes | No |
-| Mild malaise | No | Yes | No |
-| Fever | No | No | Yes |
-| Thick yellow or green discharge | No | No | Yes |
-| Facial pain or sinus pressure | No | No | Yes |
-| Symptom duration | Unknown | 7 to 10 days | More than 14 days |
-| Symptoms worsen with pollution | Yes | No | No |
-| AQI | 101–150 **or** 151+ | 0–50 | Unknown |
-| AQI aligns with symptoms | Yes | No | No |
+| Track shown in result hero | Defining answers |
+| --- | --- |
+| **المسار أ — حساسية تتفاقم بسبب التلوّث** | Watery clear discharge; itching; repeated sneezing bouts; no fever or facial pain; AQI 101–150 or 151+ **with** worsening symptoms. |
+| **المسار ب — نزلة برد / عدوى فيروسية** | Watery clear or slightly cloudy discharge; any sneezing; both congestion and mild malaise; symptoms for 7–10 days. |
+| **المسار ج — عدوى (التهاب الجيوب البكتيري) · إحالة** | Thick yellow or green discharge; both fever and facial pain; symptoms for more than 14 days. This is a track name from the supplied deck, not an automated diagnosis. |
 
-The allergy track has two explicit complete patterns, one for each AQI range above 100. The cold and referral tracks each have one complete pattern. Changing any answer produces an undefined result unless the change switches between the two accepted allergy AQI ranges.
+Every question must be answered before the result appears. Unrelated answers may vary. If both Tracks A and B are complete, the result is **مسار غير محدد**. A warning sign with Track A or B also gives **مسار غير محدد** and asks for pharmacist review. Track C requires all four warning signs; its other answers may vary.
 
-The supplied deck specifies characteristic signs but does not fix all 12 answers. For the signs it leaves open, this implementation uses the fixed values shown above to meet the requested exact matching rule. The deck also says one warning sign is enough for referral; the requested exact referral rule takes precedence here. An undefined result still displays any reported warning signs and asks the user to discuss them with a pharmacist.
+The supplied deck does not define every quiz answer for each track. The user requested track-specific matching and an exact four-sign referral track. A result with no completed track still shows warning signs in its pharmacist guidance when present.
