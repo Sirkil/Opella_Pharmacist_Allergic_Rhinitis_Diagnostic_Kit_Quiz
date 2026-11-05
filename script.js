@@ -10,7 +10,10 @@ const questions = [
 const state = {
   index:-1,
   answers:Object.fromEntries(questions.map(q=>[q.key,null])),
-  details:false
+  details:false,
+  participant:{name:'',age:'',gender:''},
+  submissionId:'',
+  saveStatus:'idle'
 };
 const app=document.getElementById('app');
 const screen=document.getElementById('screen');
@@ -46,7 +49,35 @@ function classify(){
   return {type:'cold',tag:'أنت في المسار ب',title:'نزلة برد / عدوى فيروسية',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['إفرازات شفافة إلى معكّرة قليلًا','عطس','احتقان','توعّك خفيف','مدة من 7 إلى 10 أيام'],next:'ناقش مع الصيدلي طرق تخفيف الأعراض ومتى تحتاج إلى رعاية إضافية.',reason:'اجتمعت الإفرازات الشفافة إلى المعكّرة قليلًا والعطس والاحتقان والتوعّك ومدة من 7 إلى 10 أيام. بقية الإجابات لا تغيّر المسار ما لم تكتمل شروط مسار آخر أو تظهر علامة إنذار.'};
 }
 function introScreen(){
-  return `<div class="intro-screen"><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي قصير · 7 أسئلة</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><button class="primary-button start-button" type="button" data-action="start">ابدأ الفحص <span aria-hidden="true">←</span></button><p class="trust-note">هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p></div></div></div>`;
+  const p=state.participant;
+  return `<div class="intro-screen"><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي قصير · 7 أسئلة</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><div class="participant-fields"><label>الاسم<input id="participant-name" data-participant="name" type="text" autocomplete="name" maxlength="100" value="${escapeHtml(p.name)}" placeholder="اكتب اسمك" required></label><label>العمر<input id="participant-age" data-participant="age" type="number" inputmode="numeric" min="1" max="120" value="${escapeHtml(p.age)}" placeholder="العمر بالسنوات" required></label><label>النوع<select id="participant-gender" data-participant="gender" required><option value="">اختر النوع</option><option value="ذكر" ${p.gender==='ذكر'?'selected':''}>ذكر</option><option value="أنثى" ${p.gender==='أنثى'?'selected':''}>أنثى</option><option value="أفضل عدم الإجابة" ${p.gender==='أفضل عدم الإجابة'?'selected':''}>أفضل عدم الإجابة</option></select></label></div><p id="participant-error" class="participant-error" role="alert"></p><button class="primary-button start-button" type="button" data-action="start">ابدأ الفحص <span aria-hidden="true">←</span></button><p class="trust-note">ستُحفظ بياناتك وإجاباتك ونتيجة الفحص في سجل الفحص. هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p></div></div></div>`;
+}
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+}
+function validParticipant(){
+  const p=state.participant;
+  return p.name.trim().length>=2&&p.name.trim().length<=100&&Number.isInteger(Number(p.age))&&Number(p.age)>=1&&Number(p.age)<=120&&['ذكر','أنثى','أفضل عدم الإجابة'].includes(p.gender);
+}
+function submissionPayload(){
+  const labels=questions.map(q=>{
+    const chosen=q.options.find(([value])=>value===state.answers[q.key]);
+    return chosen?chosen[1].replace(/<[^>]*>/g,''):'';
+  });
+  return {submissionId:state.submissionId,name:state.participant.name.trim(),age:Number(state.participant.age),gender:state.participant.gender,answers:labels,result:classify().title};
+}
+async function saveResult(){
+  const url=window.QUIZ_SUBMIT_URL;
+  if(!url){state.saveStatus='unconfigured';render();return;}
+  state.saveStatus='sending';render();
+  try{
+    await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(submissionPayload())});
+    state.saveStatus='sent';
+  }catch(error){state.saveStatus='error';}
+  render();
+}
+function saveMessage(){
+  return {sending:'جارٍ إرسال البيانات إلى سجل الفحص…',sent:'تم إرسال البيانات إلى سجل الفحص.',error:'تعذر إرسال البيانات. تحقق من الاتصال ثم أعد المحاولة.',unconfigured:'حفظ البيانات غير متاح حاليًا. أخبر المشرف.'}[state.saveStatus]||'';
 }
 const iconPaths={
   drop:'<path d="M12 2.5c-2.7 3.8-6 7.4-6 11a6 6 0 0 0 12 0c0-3.6-3.3-7.2-6-11Z"/><path d="M9 15.5a3 3 0 0 0 3 3"/>',
@@ -89,7 +120,7 @@ function questionScreen(){
 function resultScreen(){
   const r=classify();
   if(state.details)return detailsScreen(r);
-  return `<div class="result-screen ${r.type}"><div class="result-hero"><span class="overline">نتيجة الفحص</span><span class="result-tag">${r.tag}</span><h1>${r.title}</h1><p>${r.summary}</p></div><div class="result-body"><div class="result-block next-step"><span class="block-label">الخطوة التالية</span><p>${r.next}</p></div><div class="result-disclaimer">يساعد هذا الفحص في الحوار مع الصيدلي، ولا يُعد تشخيصًا أو وصفة علاجية.</div><div class="result-actions"><button class="text-button" type="button" data-action="edit">→ تعديل الإجابات</button><button class="primary-button" type="button" data-action="details">تفاصيل للصيدلي <span aria-hidden="true">←</span></button></div></div></div>`;
+  return `<div class="result-screen ${r.type}"><div class="result-hero"><span class="overline">نتيجة الفحص</span><span class="result-tag">${r.tag}</span><h1>${r.title}</h1><p>${r.summary}</p></div><div class="result-body"><div class="result-block next-step"><span class="block-label">الخطوة التالية</span><p>${r.next}</p></div><div class="result-disclaimer">يساعد هذا الفحص في الحوار مع الصيدلي، ولا يُعد تشخيصًا أو وصفة علاجية.</div><p class="save-status" role="status">${saveMessage()}</p><div class="result-actions"><button class="text-button" type="button" data-action="edit">→ تعديل الإجابات</button>${state.saveStatus==='error'?'<button class="text-button" type="button" data-action="retry">إعادة الإرسال</button>':''}<button class="primary-button" type="button" data-action="details">تفاصيل للصيدلي <span aria-hidden="true">←</span></button></div></div></div>`;
 }
 function detailsScreen(r){
   const a=state.answers;
@@ -122,13 +153,32 @@ screen.addEventListener('click',event=>{
   }
   const action=event.target.closest('[data-action]')?.dataset.action;
   if(!action)return;
-  if(action==='start')state.index=0;
-  if(action==='next'&&state.answers[questions[state.index].key]!==null)state.index++;
+  if(action==='start'){
+    if(!validParticipant()){
+      document.getElementById('participant-error').textContent='أدخل الاسم والعمر الصحيح واختر النوع للمتابعة.';
+      return;
+    }
+    state.index=0;
+    state.submissionId=crypto.randomUUID();
+  }
+  if(action==='next'&&state.answers[questions[state.index].key]!==null){
+    state.index++;
+    if(state.index===questions.length){saveResult();return;}
+  }
   if(action==='back')state.index--;
   if(action==='edit'){state.index=0;state.details=false;}
   if(action==='details')state.details=true;
   if(action==='summary')state.details=false;
-  if(action==='reset'){state.index=-1;state.answers=Object.fromEntries(questions.map(q=>[q.key,null]));state.details=false;}
+  if(action==='retry'){saveResult();return;}
+  if(action==='reset'){state.index=-1;state.answers=Object.fromEntries(questions.map(q=>[q.key,null]));state.details=false;state.participant={name:'',age:'',gender:''};state.submissionId='';state.saveStatus='idle';}
   render();
+});
+screen.addEventListener('input',event=>{
+  const field=event.target.dataset.participant;
+  if(field){state.participant[field]=event.target.value;document.getElementById('participant-error').textContent='';}
+});
+screen.addEventListener('change',event=>{
+  const field=event.target.dataset.participant;
+  if(field){state.participant[field]=event.target.value;document.getElementById('participant-error').textContent='';}
 });
 render();

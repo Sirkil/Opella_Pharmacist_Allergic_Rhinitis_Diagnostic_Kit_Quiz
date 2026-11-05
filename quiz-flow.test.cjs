@@ -16,7 +16,7 @@ const document = {
     return elements.get(id);
   }
 };
-const context = vm.createContext({ document });
+const context = vm.createContext({ document, window: { QUIZ_SUBMIT_URL: '' }, crypto: { randomUUID: () => '123e4567-e89b-42d3-a456-426614174000' } });
 const source = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
 vm.runInContext(`${source}\nglobalThis.quizFlow = { questions, state };`, context);
 const { questions, state } = context.quizFlow;
@@ -37,6 +37,7 @@ function clickAnswer(value) {
 
 function completeQuiz(answers) {
   clickAction('reset');
+  state.participant = { name: 'Test User', age: '30', gender: 'ذكر' };
   clickAction('start');
   questions.forEach((question, index) => {
     assert.equal(state.index, index, `question ${index + 1} is active`);
