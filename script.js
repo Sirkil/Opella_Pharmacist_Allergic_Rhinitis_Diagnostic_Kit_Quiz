@@ -10,12 +10,10 @@ const questions = [
 const state = {
   index:-1,
   answers:Object.fromEntries(questions.map(q=>[q.key,null])),
-  details:false,
-  motion:true
+  details:false
 };
 const app=document.getElementById('app');
 const screen=document.getElementById('screen');
-const rail=document.getElementById('insight-rail');
 function safetyFlags(){
   const a=state.answers;
   const flags=[];
@@ -47,55 +45,46 @@ function classify(){
   if(matched[0].type==='allergy')return {type:'allergy',tag:'أنت في المسار أ',title:'حساسية تتفاقم بسبب التلوّث',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['سيلان أنف مائي وشفاف','حكّة','نوبات عطس متتالية','مؤشر الهواء أعلى من 100','ارتباط ملحوظ بجودة الهواء'],next:'اسأل الصيدلي عن تقليل التعرض للمحفزات والعناية المناسبة للحساسية.',reason:'اجتمعت الإفرازات المائية والحكّة ونوبات العطس وعدم وجود حمّى ومؤشر هواء أعلى من 100 وارتباط الأعراض بالتلوّث. بقية الإجابات لا تغيّر المسار ما لم تكتمل شروط مسار آخر أو تظهر علامة إنذار.'};
   return {type:'cold',tag:'أنت في المسار ب',title:'نزلة برد / عدوى فيروسية',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['إفرازات شفافة إلى معكّرة قليلًا','عطس','احتقان','توعّك خفيف','مدة من 7 إلى 10 أيام'],next:'ناقش مع الصيدلي طرق تخفيف الأعراض ومتى تحتاج إلى رعاية إضافية.',reason:'اجتمعت الإفرازات الشفافة إلى المعكّرة قليلًا والعطس والاحتقان والتوعّك ومدة من 7 إلى 10 أيام. بقية الإجابات لا تغيّر المسار ما لم تكتمل شروط مسار آخر أو تظهر علامة إنذار.'};
 }
-function answeredCount(){return questions.filter(q=>state.answers[q.key]!==null).length;}
 function introScreen(){
-  return `<div class="intro-screen"><div class="intro-visual" aria-hidden="true"><div class="visual-disc"><svg viewBox="0 0 240 200" fill="none"><path d="M22 80c34-38 62-38 96 0s62 38 100 0"/><path d="M22 118c34-38 62-38 96 0s62 38 100 0"/><path d="M22 156c34-38 62-38 96 0s62 38 100 0"/></svg></div></div><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي قصير</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><p class="trust-note">هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p><button class="primary-button start-button" type="button" data-action="start">ابدأ الفحص <span aria-hidden="true">←</span></button></div></div></div>`;
+  return `<div class="intro-screen"><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي قصير · 7 أسئلة</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><button class="primary-button start-button" type="button" data-action="start">ابدأ الفحص <span aria-hidden="true">←</span></button><p class="trust-note">هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p></div></div></div>`;
 }
 const iconPaths={
-  watery:'<path d="M12 2.5C9.3 6.2 5.5 10.2 5.5 14a6.5 6.5 0 0 0 13 0c0-3.8-3.8-7.8-6.5-11.5Z"/><path d="M9 15c.2 1.4 1.1 2.3 2.3 2.6"/>',
-  itch:'<path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/><circle cx="12" cy="12" r="2"/>',
-  sneeze:'<path d="M12 3v4M4.5 6.5l2.8 2.8M2 14h4M18 14h4M16.7 9.3l2.8-2.8M7 18c3-2 7-2 10 0"/>',
-  blocked:'<path d="M10 3v8l-3 4a2.8 2.8 0 0 0 2.2 4.5h5.6A2.8 2.8 0 0 0 17 15l-3-4V3M9 16h6"/>',
-  malaise:'<rect x="2.5" y="7" width="17" height="10" rx="2"/><path d="M22 10v4M6 12h5"/>',
-  well:'<rect x="2.5" y="7" width="17" height="10" rx="2"/><path d="M22 10v4M6 12h10M9 9v6M13 9v6"/>',
-  fever:'<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0Z"/><path d="M12 9v8"/>',
-  thick:'<path d="M12 3C9 7 5 10 5 14a7 7 0 0 0 14 0c0-4-4-7-7-11Z"/><path d="M8 15c2-2 6-2 8 0"/>',
-  pain:'<circle cx="12" cy="12" r="9"/><path d="M8 9.5h.01M16 9.5h.01M9 16c2-1 4-1 6 0M4 4l2 2M20 4l-2 2"/>',
-  duration:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
-  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h3M8 17h7"/>',
-  calendarLong:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M12 13v4m0 2h.01"/>',
-  pollution:'<path d="M5 16h13a3 3 0 0 0 .2-6A6 6 0 0 0 7 8a4 4 0 0 0-2 8ZM3 19h14M8 22h13"/>',
-  alignment:'<path d="M3 8c3-3 6-3 9 0s6 3 9 0M3 16c3-3 6-3 9 0s6 3 9 0"/>',
-  mismatch:'<path d="M3 6c3 0 5 2 8 4s6 2 10-1M3 18c3 0 5-2 8-4s6-2 10 1"/>',
-  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/>',
-  moderate:'<path d="M8 5a4 4 0 0 1 7 3M4 16h15a3 3 0 0 0-.2-6 5 5 0 0 0-9.6-1A3.5 3.5 0 0 0 4 16Z"/>',
-  sensitive:'<path d="M3 8h10c3 0 3-4 0-4M2 12h17c3 0 3 4 0 4M4 17h8c3 0 3 4 0 4"/>',
-  unhealthy:'<path d="M5 16h13a3 3 0 0 0 .2-6A6 6 0 0 0 7 8a4 4 0 0 0-2 8ZM4 20h16M12 11v3m0 2h.01"/>',
+  drop:'<path d="M12 2.5c-2.7 3.8-6 7.4-6 11a6 6 0 0 0 12 0c0-3.6-3.3-7.2-6-11Z"/><path d="M9 15.5a3 3 0 0 0 3 3"/>',
+  cloudy:'<path d="M12 2.5c-2.7 3.8-6 7.4-6 11a6 6 0 0 0 12 0c0-3.6-3.3-7.2-6-11Z"/><path d="M8 14c1.2-.8 2.3-.8 3.5 0s2.3.8 4.5-.2"/>',
+  thick:'<path d="M12 2.5c-2.7 3.8-6 7.4-6 11a6 6 0 0 0 12 0c0-3.6-3.3-7.2-6-11Z"/><path d="M9 12.5h6M9 15.5h6"/>',
+  eye:'<path d="M2.5 12s3.6-5 9.5-5 9.5 5 9.5 5-3.6 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/><path d="m18 3 .5 1.5L20 5l-1.5.5L18 7l-.5-1.5L16 5l1.5-.5L18 3Z"/>',
+  sneeze:'<path d="M6 17c3.5-2.5 8.5-2.5 12 0M12 3v5M5 5l3 3M19 5l-3 3M2 12h4M18 12h4"/>',
+  bursts:'<path d="M6 4v5M3.5 6.5h5M18 3v5M15.5 5.5h5M12 12v7M8.5 15.5h7"/>',
+  nose:'<path d="M10 3v8l-3 4a3 3 0 0 0 2.4 4.8h5.2A3 3 0 0 0 17 15l-3-4V3M9 16.5c1.8 1 4.2 1 6 0"/>',
+  energy:'<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 10v4M6.5 12h5"/>',
+  both:'<circle cx="8" cy="10" r="4"/><circle cx="16" cy="14" r="4"/><path d="M5 20h14"/>',
+  thermometer:'<path d="M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0Z"/><path d="M12 9v7"/>',
+  face:'<circle cx="12" cy="12" r="9"/><path d="M8 10h.01M16 10h.01M8.5 16c2-1.5 5-1.5 7 0"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h8M8 17h5"/>',
+  calendarLong:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M12 13v4M12 19h.01"/>',
+  air:'<path d="M3 8h11c3 0 3-4 0-4M2 12h17c3 0 3 4 0 4M4 17h8c3 0 3 4 0 4"/>',
+  airHigh:'<path d="M3 8h11c3 0 3-4 0-4M2 13h16c3 0 3 4 0 4M5 20h10M20 20h.01"/>',
+  clear:'<circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/>',
+  none:'<circle cx="12" cy="12" r="9"/><path d="M5.5 18.5 18.5 5.5"/>',
   unknown:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.7 2.7 0 0 1 5.1 1.3c0 1.7-2.6 2-2.6 4M12 18h.01"/>'
 };
-const questionTones={discharge:'aqua',itch:'lilac',sneeze:'peach',coldSigns:'mint',warningSigns:'coral',duration:'aqua',air:'lilac'};
 function tileIcon(key,option){
   const icons={
-    discharge:{watery:'watery',cloudy:'watery',thick:'thick',none:'well'},
-    itch:{yes:'itch',no:'itch'},
-    sneeze:{bouts:'sneeze',yes:'sneeze',no:'sneeze'},
-    coldSigns:{both:'blocked',blocked:'blocked',malaise:'malaise',none:'well'},
-    warningSigns:{both:'fever',fever:'fever',pain:'pain',none:'well'},
-    duration:{short:'duration',typical:'calendar',medium:'calendar',long:'calendarLong',unknown:'unknown'},
-    air:{linked_sensitive:'sensitive',linked_unhealthy:'unhealthy',high_unlinked:'moderate',not_high:'sun',unknown:'unknown'}
+    discharge:{watery:'drop',cloudy:'cloudy',thick:'thick',none:'none'},
+    itch:{yes:'eye',no:'none'},
+    sneeze:{bouts:'bursts',yes:'sneeze',no:'none'},
+    coldSigns:{both:'both',blocked:'nose',malaise:'energy',none:'none'},
+    warningSigns:{both:'both',fever:'thermometer',pain:'face',none:'none'},
+    duration:{short:'calendar',typical:'calendar',medium:'calendar',long:'calendarLong',unknown:'unknown'},
+    air:{linked_sensitive:'air',linked_unhealthy:'airHigh',high_unlinked:'airHigh',not_high:'clear',unknown:'unknown'}
   };
-  const icon=icons[key][option];
-  const crossed=option==='no';
-  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[icon]}${crossed?'<path class="icon-strike" d="M4 20 20 4"/>':''}</svg>`;
-}
-function tileTone(key,option,index){
-  return key==='air'?['peach','coral','aqua','mint','lilac'][index]:key==='warningSigns'&&option==='none'?'mint':questionTones[key];
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[icons[key][option]]}</svg>`;
 }
 function questionScreen(){
   const q=questions[state.index];
   const value=state.answers[q.key];
-  const choices=q.options.map(([option,label],index)=>`<button type="button" data-value="${option}" data-key="${q.key}" data-tone="${tileTone(q.key,option,index)}" class="choice ${value===option?'selected':''}" aria-pressed="${value===option}"><span class="choice-icon" aria-hidden="true">${tileIcon(q.key,option)}</span><strong>${label}</strong></button>`).join('');
-  return `<div class="question-screen"><div class="question-stage"><span class="question-number" aria-hidden="true">${String(state.index+1).padStart(2,'0')}</span><div class="question-copy"><span class="overline">${q.eyebrow}</span><h1>${q.title}</h1><p>${q.detail}</p></div></div><div class="answer-deck"><div class="deck-heading"><span>إجابتك</span><span><bdi>${String(state.index+1).padStart(2,'0')} / ${questions.length}</bdi></span></div><div class="choices ${q.options.length===5?'five':q.options.length===4?'four':q.options.length===3?'three':''}" role="group" aria-label="${q.title}">${choices}</div><div class="why-note"><span class="why-label">لماذا يهم هذا؟</span><p>${q.insight}</p></div><div class="question-nav"><button class="text-button" type="button" data-action="back">→ ${state.index===0?'المقدمة':'السؤال السابق'}</button><button class="primary-button continue-button" type="button" data-action="next" ${value===null?'disabled':''}>${state.index===questions.length-1?'عرض الملخص':'السؤال التالي'} <span aria-hidden="true">←</span></button></div></div></div>`;
+  const choices=q.options.map(([option,label])=>`<button type="button" data-value="${option}" data-key="${q.key}" class="choice ${value===option?'selected':''}" aria-pressed="${value===option}"><span class="choice-icon" aria-hidden="true">${tileIcon(q.key,option)}</span><strong>${label}</strong><span class="choice-indicator" aria-hidden="true"></span></button>`).join('');
+  return `<div class="question-screen"><div class="question-stage"><div class="question-copy"><span class="overline">${q.eyebrow}</span><h1>${q.title}</h1><p>${q.detail}</p></div></div><div class="answer-deck"><div class="choices ${q.options.length===5?'five':q.options.length===4?'four':q.options.length===3?'three':''}" role="group" aria-label="${q.title}">${choices}</div><div class="question-nav"><button class="text-button" type="button" data-action="back">→ ${state.index===0?'المقدمة':'السؤال السابق'}</button><button class="primary-button continue-button" type="button" data-action="next" ${value===null?'disabled':''}>${state.index===questions.length-1?'عرض الملخص':'السؤال التالي'} <span aria-hidden="true">←</span></button></div></div></div>`;
 }
 function resultScreen(){
   const r=classify();
@@ -115,12 +104,6 @@ function detailsScreen(r){
   const counsel=r.type==='allergy'?'قيّم ملاءمة العلاج. قد يكون مضاد الهيستامين، مثل فيكسوفينادين، خيارًا بعد مراجعة العمر والنشرة المحلية وموانع الاستعمال.':r.type==='cold'?'ناقش تخفيف الأعراض والراحة وشرب السوائل والمتابعة إذا استمرت الأعراض أو ساءت.':r.type==='referral'?'قيّم الحاجة إلى الإحالة وفق التاريخ المرضي الكامل والإرشادات المحلية. المخاط الملوّن وحده لا يثبت وجود عدوى بكتيرية أو الحاجة إلى مضاد حيوي.':'وضّح الإجابات غير المؤكدة وفكّر في الأسباب الأخرى قبل اقتراح الرعاية.';
   return `<div class="details-screen"><div class="details-hero"><span class="overline">دعم قرار الصيدلي</span><h1>${r.type==='review'?'لماذا لم يُحدَّد مسار؟':'لماذا ظهر هذا المسار؟'}</h1><p>${r.reason}</p></div><div class="details-body"><div class="detail-list"><span class="block-label">مراجعة المسارات</span>${line('01 · علامات الإنذار',safetyFlags().length?safetyFlags().join(' · '):`لا توجد علامات إنذار مذكورة · ${warningSigns} · ${duration}`,r.type==='referral'||(r.type==='review'&&safetyFlags().length>0))}${line('02 · الحساسية والهواء',`الإفرازات: ${discharge} · حكّة: ${answer(a.itch)} · عطس: ${sneeze} · AQI: ${air}`,r.type==='allergy')}${line('03 · نزلة البرد',`الإفرازات: ${discharge} · عطس: ${sneeze} · ${coldSigns} · المدة: ${duration}`,r.type==='cold')}${line('04 · مسار غير محدد','شروط غير مكتملة أو علامات من مسارات مختلفة',r.type==='review')}</div><div class="counsel-card"><span class="block-label">إرشاد للصيدلي</span><p>${counsel}</p></div><div class="result-actions"><button class="text-button" type="button" data-action="summary">→ الملخص</button><button class="primary-button" type="button" data-action="reset">فحص جديد <span aria-hidden="true">↖</span></button></div></div></div>`;
 }
-function renderRail(){
-  const count=answeredCount();
-  const flags=safetyFlags();
-  const phase=state.index<0?'ابدأ بوصف ما تشعر به':state.index>=questions.length?'الخطوة التالية':questions[state.index].group;
-  return `<span class="rail-kicker">بإرشاد الصيدلي</span><div class="rail-wave" aria-hidden="true"><svg viewBox="0 0 240 160" fill="none"><path d="M12 55c36-38 66-38 102 0s66 38 114 0"/><path d="M12 103c36-38 66-38 102 0s66 38 114 0"/></svg></div><h2>علامة بعد أخرى<br><em>لصورة أوضح</em></h2><p>أجب عمّا تعرفه. تساعد الأعراض وعلامات الإنذار وجودة الهواء الصيدلي في إرشادك.</p><div class="rail-meter"><div><span>تقدّمك</span><strong><bdi>${count} / ${questions.length}</bdi></strong></div><div class="rail-bar"><span style="width:${count/questions.length*100}%"></span></div></div><div class="rail-current"><span>المرحلة الحالية</span><strong>${phase}</strong></div><div class="rail-status ${flags.length?'alert':''}">${flags.length?`علامات تستدعي المراجعة: ${flags.length}`:'يشمل الفحص علامات الإنذار'}</div><div class="rail-footer">لدعم الحوار مع الصيدلي، وليس للتشخيص الآلي.</div>`;
-}
 function render(){
   const intro=state.index<0,done=state.index>=questions.length;
   app.classList.toggle('is-intro',intro);
@@ -129,7 +112,6 @@ function render(){
   document.getElementById('progress-text').textContent=intro?'7 أسئلة قصيرة':done?'اكتمل الفحص':`السؤال ${state.index+1} من ${questions.length}`;
   document.getElementById('progress-track').innerHTML=questions.map((_,i)=>`<span class="${done||i<state.index?'complete':i===state.index?'current':''}"></span>`).join('');
   screen.innerHTML=intro?introScreen():done?resultScreen():questionScreen();
-  rail.innerHTML=renderRail();
 }
 screen.addEventListener('click',event=>{
   const option=event.target.closest('[data-value]');
@@ -148,13 +130,5 @@ screen.addEventListener('click',event=>{
   if(action==='summary')state.details=false;
   if(action==='reset'){state.index=-1;state.answers=Object.fromEntries(questions.map(q=>[q.key,null]));state.details=false;}
   render();
-});
-document.getElementById('motion-toggle').addEventListener('click',()=>{
-  state.motion=!state.motion;
-  app.classList.toggle('motion-off',!state.motion);
-  const button=document.getElementById('motion-toggle');
-  button.querySelector('span:last-child').textContent=state.motion?'الحركة مفعّلة':'الحركة متوقفة';
-  button.setAttribute('aria-pressed',String(!state.motion));
-  button.setAttribute('aria-label',state.motion?'إيقاف الحركة':'تشغيل الحركة');
 });
 render();

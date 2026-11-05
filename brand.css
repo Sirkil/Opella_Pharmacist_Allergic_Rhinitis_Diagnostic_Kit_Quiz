@@ -1,0 +1,342 @@
+/* One background, with content and answer choices placed directly on it. */
+:root {
+  --green: #4a1554;
+  --leaf: #ffc16f;
+  --cream: #fff8f4;
+  --purple: #501355;
+  --magenta: #a40087;
+  --orange: #f58a12;
+  --ink: #411744;
+}
+
+html, body {
+  background: #650064;
+}
+
+body {
+  background-image: linear-gradient(90deg, #350039a8, #4800467d), url('assets/brand-background-landscape.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.app {
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  padding: 0 clamp(20px, 4vw, 72px);
+  grid-template-rows: 76px minmax(0, 1fr);
+  gap: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.topbar {
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  padding: 0;
+  border-bottom: 1px solid #ffffff57;
+  background: none;
+  border-radius: 0;
+}
+.opella-logo { width: 138px; }
+button:focus-visible { outline-color: #ffb347; }
+
+.workspace {
+  width: 100%;
+  max-width: 1100px;
+  height: 100%;
+  margin: auto;
+  display: block;
+}
+.journey {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.journey-top {
+  padding: 18px 0 12px;
+  background: none;
+}
+.journey-meta, .journey-meta span:last-child { color: #fff; }
+.journey-meta { font-size: 12px; }
+.progress-track { height: 5px; gap: 5px; }
+.progress-track span { background: #ffffff5c; }
+.progress-track span.current, .progress-track span.complete { background: #ff9d24; }
+.screen { flex: 1; overflow-y: auto; scrollbar-width: thin; }
+.screen > div { height: auto; min-height: 100%; }
+.overline { color: #ffc276; font-size: 12px; }
+
+.intro-screen {
+  display: flex;
+  align-items: center;
+  grid-template-rows: none;
+  background: none;
+}
+html[lang="ar"] .intro-screen { grid-template-rows: none; }
+.intro-content {
+  width: min(100%, 760px);
+  min-height: 0;
+  margin: auto 0;
+  padding: 50px 0 80px;
+  justify-content: center;
+  gap: 42px;
+  border: 0;
+  background: none;
+}
+.intro-copy h1 {
+  margin: 18px 0;
+  color: #fff;
+  font-size: clamp(50px, 7vw, 88px);
+  text-shadow: 0 4px 20px #37003580;
+}
+.intro-copy p {
+  max-width: 670px;
+  color: #fff4f7;
+  font-size: clamp(17px, 1.8vw, 22px);
+}
+.intro-bottom { gap: 14px; }
+.trust-note { color: #f8dfee; font-size: 12px; }
+
+.primary-button {
+  border-radius: 12px;
+  background: #ff9c23;
+  color: #401442;
+  box-shadow: 0 8px 22px #31002f55;
+}
+.primary-button:hover { background: #ffb34b; }
+.start-button { width: min(100%, 440px); min-height: 58px; font-size: 18px; }
+
+.question-screen {
+  width: min(100%, 880px);
+  min-height: 100%;
+  margin: auto;
+  padding: 28px 0 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  grid-template-rows: none;
+}
+html[lang="ar"] .question-screen { grid-template-rows: none; }
+.question-stage {
+  display: block;
+  flex: none;
+  padding: 0;
+  background: none;
+}
+.question-copy h1 {
+  max-width: 850px;
+  margin: 12px 0 10px;
+  color: #fff;
+  font-size: clamp(34px, 4.5vw, 56px);
+  text-shadow: 0 4px 20px #37003580;
+}
+.question-copy p { color: #fff1f5; font-size: 16px; }
+.answer-deck {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 18px;
+  padding: 0;
+  background: none;
+  color: #fff;
+}
+.choices, .choices.three, .choices.four, .choices.five {
+  display: grid;
+  flex: none;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: none;
+  gap: 12px;
+}
+.choices.five .choice:last-child { grid-column: 1 / -1; }
+.choice, .choices.four .choice, .choices.five .choice {
+  min-height: 72px;
+  gap: 13px;
+  padding: 13px 16px;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: #fffaf7;
+  color: var(--ink);
+  box-shadow: 0 6px 20px #32003340;
+}
+.choice:hover { border-color: #ffac43; box-shadow: 0 9px 24px #32003360; }
+.choice.selected, .choices.four .choice.selected, .choices.five .choice.selected {
+  padding: 13px 16px;
+  border: 2px solid #ff9c23;
+  background: #fff0dc;
+  box-shadow: 0 7px 20px #3200334d;
+  animation: none;
+}
+.choice-icon, .choices.four .choice-icon, .choices.five .choice-icon {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #f7e7f0;
+  color: #92267e;
+}
+.choice.selected .choice-icon { background: #ffe0a8; color: #6f2360; }
+.choice-icon svg, .choices.four .choice-icon svg, .choices.five .choice-icon svg {
+  width: 25px;
+  height: 25px;
+  animation: none !important;
+}
+.choice strong, .choices.four .choice strong, .choices.five .choice strong {
+  font-size: 15px;
+  line-height: 1.35;
+}
+.choice-indicator {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #b798ae;
+  border-radius: 50%;
+}
+.choice.selected .choice-indicator {
+  display: grid;
+  place-items: center;
+  border-color: #a40087;
+  background: #a40087;
+  color: #fff;
+}
+.choice.selected .choice-indicator::after { content: '✓'; font-size: 13px; line-height: 1; }
+.question-nav { margin-top: 3px; }
+.text-button { color: #fff; font-size: 14px; }
+.continue-button, .result-actions .primary-button {
+  min-height: 48px;
+  padding: 11px 20px;
+  background: #ff9c23;
+  color: #401442;
+  font-size: 14px;
+}
+.continue-button:hover, .result-actions .primary-button:hover { background: #ffb34b; }
+.primary-button:disabled { opacity: .55; box-shadow: none; }
+
+.result-screen, .details-screen {
+  width: min(100%, 880px);
+  min-height: 100%;
+  margin: auto;
+  padding: 28px 0 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+  grid-template-rows: none;
+  color: #fff;
+}
+html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-rows: none; }
+.result-hero, .details-hero {
+  display: block;
+  flex: none;
+  padding: 0;
+  background: none;
+  color: #fff;
+}
+.result-hero h1, .details-hero h1 {
+  max-width: 850px;
+  margin: 14px 0 12px;
+  font-size: clamp(34px, 4.6vw, 58px);
+  text-shadow: 0 4px 20px #37003580;
+}
+.result-hero p, .details-hero p { color: #fff0f5; font-size: 16px; }
+.result-tag { border-color: #ffc276; color: #ffc276; }
+.result-body, .details-body {
+  display: flex;
+  flex: none;
+  gap: 22px;
+  padding: 0;
+  background: none;
+  color: #fff;
+}
+.result-block, .detail-list, .counsel-card {
+  border: 0;
+  padding: 0 14px 0 0;
+  border-right: 3px solid #ff9c23;
+}
+.block-label { color: #ffc276; }
+.next-step p, .counsel-card p { font-size: 16px; }
+.result-disclaimer { color: #f4d8e9; font-size: 12px; }
+.detail-line { border-bottom-color: #ffffff4d; font-size: 13px; }
+.detail-line span { color: #f4d8e9; }
+.detail-line.active { background: #ffffff21; }
+
+@media (max-width: 800px) {
+  body {
+    background-image: linear-gradient(180deg, #38003c9c, #51004db5), url('assets/brand-background-portrait.jpg');
+  }
+  .app {
+    display: grid;
+    grid-template-rows: 68px minmax(0, 1fr);
+    padding: 0 18px;
+  }
+  .topbar {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    height: 68px;
+    padding: 0;
+  }
+  .opella-logo { width: 120px; }
+  .workspace, .journey { height: 100%; }
+  .journey-top {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    padding: 12px 0 10px;
+  }
+  .screen { height: auto; flex: 1; }
+  .intro-screen { min-height: 100%; }
+  .intro-content { padding: 34px 0 58px; gap: 36px; }
+  .intro-copy h1 { font-size: clamp(44px, 11vw, 62px); }
+  .intro-copy p { font-size: 16px; }
+  .question-screen { padding: 22px 0 28px; gap: 24px; }
+  .question-copy h1 { font-size: clamp(28px, 8vw, 40px); }
+  .question-copy p { font-size: 14px; }
+  .choices, .choices.three, .choices.four, .choices.five {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    gap: 9px;
+  }
+  .choices.five .choice:last-child { grid-column: auto; }
+  .choice, .choices.four .choice, .choices.five .choice,
+  .choice.selected, .choices.four .choice.selected, .choices.five .choice.selected {
+    min-height: 58px;
+    padding: 8px 11px;
+  }
+  .choice-icon, .choices.four .choice-icon, .choices.five .choice-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .choice-icon svg, .choices.four .choice-icon svg, .choices.five .choice-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .choice strong, .choices.four .choice strong, .choices.five .choice strong { font-size: 14px; }
+  .result-screen, .details-screen { padding: 22px 0 28px; gap: 28px; }
+  .result-hero h1, .details-hero h1 { font-size: clamp(29px, 8vw, 40px); }
+  .result-hero p, .details-hero p, .next-step p, .counsel-card p { font-size: 14px; }
+  .result-body, .details-body { gap: 18px; }
+  .detail-line { grid-template-columns: 105px 1fr; font-size: 11px; }
+}
+
+@media (max-width: 800px) and (orientation: landscape) {
+  body {
+    background-image: linear-gradient(90deg, #350039a8, #4800467d), url('assets/brand-background-landscape.jpg');
+  }
+}
+
+@media (max-height: 600px) {
+  .intro-content { padding-top: 18px; padding-bottom: 24px; }
+  .question-screen, .result-screen, .details-screen { justify-content: flex-start; }
+}
