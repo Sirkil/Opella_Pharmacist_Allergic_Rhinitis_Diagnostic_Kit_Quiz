@@ -4,12 +4,14 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const elements = new Map();
+const startButton = { disabled: true };
 const document = {
   getElementById(id) {
     if (!elements.has(id)) elements.set(id, {
       classList: { toggle() {} },
       listeners: {},
       addEventListener(type, handler) { this.listeners[type] = handler; },
+      querySelector(selector) { return selector === '[data-action="start"]' ? startButton : null; },
       innerHTML: '',
       textContent: ''
     });
@@ -18,9 +20,18 @@ const document = {
 };
 const context = vm.createContext({ document, window: { QUIZ_SUBMIT_URL: '' }, crypto: { randomUUID: () => '123e4567-e89b-42d3-a456-426614174000' } });
 const source = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
-vm.runInContext(`${source}\nglobalThis.quizFlow = { questions, state };`, context);
-const { questions, state } = context.quizFlow;
+vm.runInContext(`${source}\nglobalThis.quizFlow = { questions, state, submissionPayload };`, context);
+const { questions, state, submissionPayload } = context.quizFlow;
 const screen = document.getElementById('screen');
+assert(screen.innerHTML.includes('id="participant-age"'));
+assert(screen.innerHTML.includes('id="participant-gender"'));
+assert(!screen.innerHTML.includes('participant-name'));
+assert(!screen.innerHTML.includes('أفضل عدم الإجابة'));
+assert(screen.innerHTML.includes('data-action="start" disabled'));
+screen.listeners.input({ target: { dataset: { participant: 'age' }, value: '30' } });
+assert(startButton.disabled, 'age alone does not enable Start');
+screen.listeners.change({ target: { dataset: { participant: 'gender' }, value: 'أنثى' } });
+assert(!startButton.disabled, 'age and gender enable Start');
 
 function clickAction(action) {
   screen.listeners.click({ target: { closest(selector) {
@@ -37,7 +48,7 @@ function clickAnswer(value) {
 
 function completeQuiz(answers) {
   clickAction('reset');
-  state.participant = { name: 'Test User', age: '30', gender: 'ذكر' };
+  state.participant = { age: '30', gender: 'ذكر' };
   clickAction('start');
   questions.forEach((question, index) => {
     assert.equal(state.index, index, `question ${index + 1} is active`);
@@ -60,6 +71,11 @@ const cases = [
 for (const [label, answers, expected] of cases) {
   const html = completeQuiz(answers);
   assert(html.includes(expected), `${label} should show ${expected}`);
+  const payload = submissionPayload();
+  assert.equal(payload.age, 30);
+  assert.equal(payload.gender, 'ذكر');
+  assert.equal(payload.answers.length, 7);
+  assert(!Object.hasOwn(payload, 'name'));
 }
 
 console.log('Clicked through all seven questions for Tracks A, B, C, and two undefined cases.');

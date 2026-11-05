@@ -95,7 +95,7 @@ html[lang="ar"] .intro-screen { grid-template-rows: none; }
 }
 .intro-bottom { gap: 14px; }
 .trust-note { color: #f8dfee; font-size: 12px; }
-.participant-fields { display: grid; grid-template-columns: 2fr 1fr 1.3fr; gap: 12px; }
+.participant-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .participant-fields label { display: grid; gap: 7px; color: #fff; font-size: 14px; font-weight: 700; }
 .participant-fields input, .participant-fields select { width: 100%; min-width: 0; min-height: 48px; padding: 10px 12px; border: 2px solid transparent; border-radius: 10px; background: #fffaf7; color: #411744; font: inherit; font-size: 15px; }
 .participant-fields input:focus, .participant-fields select:focus { outline: 2px solid #ff9c23; outline-offset: 2px; }
@@ -328,4 +328,65 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
 @media (max-height: 600px) {
   .intro-content { padding-top: 18px; padding-bottom: 24px; }
   .question-screen, .result-screen, .details-screen { justify-content: flex-start; }
+}
+
+/* Keep the artwork behind every phone screen and let long content scroll. */
+@media (max-width: 800px) {
+  .app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    padding: 0 18px;
+    background: linear-gradient(180deg, #35003966 0%, #42004733 48%, #35003980 100%), url('assets/brand-background-portrait.jpg') center / cover no-repeat;
+  }
+  .workspace, .journey { flex: 1; min-height: 0; height: auto; }
+  .journey { display: flex; flex-direction: column; }
+  .journey-top { position: relative; top: auto; flex: none; padding: 18px 2px 12px; }
+  .screen { flex: 1; min-height: 0; height: auto; overflow-y: auto; }
+  .intro-screen, .question-screen, .result-screen, .details-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+    margin: 0;
+  }
+  .intro-screen { justify-content: flex-start; }
+  .intro-content {
+    flex: 1;
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: clamp(52px, 9vh, 92px) 2px clamp(28px, 5vh, 48px);
+    justify-content: space-between;
+    gap: 36px;
+  }
+  .intro-copy, .intro-bottom { width: 100%; }
+  .intro-copy h1 { font-size: clamp(40px, 10.5vw, 58px); }
+  .intro-copy p { font-size: 15px; }
+  .intro-bottom { gap: 14px; }
+  .participant-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .participant-fields input, .participant-fields select { min-height: 52px; }
+  .start-button { width: 100%; max-width: none; min-height: 56px; }
+  .question-screen, .result-screen, .details-screen { padding: 18px 2px 28px; gap: 22px; }
+  .question-stage, .answer-deck, .result-hero, .result-body, .details-hero, .details-body { width: 100%; padding: 0; }
+  .question-copy h1 { font-size: clamp(29px, 8vw, 42px); }
+  .question-copy p { font-size: 14px; }
+  .answer-deck { gap: 18px; }
+  .choices, .choices.three, .choices.four, .choices.five { display: grid; grid-template-columns: minmax(0, 1fr); gap: 9px; }
+  .choices.five .choice:last-child { grid-column: auto; }
+  .choice, .choices.four .choice, .choices.five .choice,
+  .choice.selected, .choices.four .choice.selected, .choices.five .choice.selected { min-height: 58px; padding: 8px 11px; }
+  .result-hero h1, .details-hero h1 { font-size: clamp(30px, 8vw, 42px); }
+  .result-body, .details-body { gap: 18px; }
+}
+@media (max-width: 800px) and (orientation: landscape) {
+  .app { background-image: linear-gradient(90deg, #35003955, #48004670), url('assets/brand-background-landscape.jpg'); }
+}
+@media (max-width: 360px) {
+  .app { padding: 0 14px; }
+  .participant-fields { grid-template-columns: minmax(0, 1fr); }
 }

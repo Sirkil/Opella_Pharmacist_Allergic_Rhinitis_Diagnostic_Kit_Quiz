@@ -11,7 +11,7 @@ const state = {
   index:-1,
   answers:Object.fromEntries(questions.map(q=>[q.key,null])),
   details:false,
-  participant:{name:'',age:'',gender:''},
+  participant:{age:'',gender:''},
   submissionId:'',
   saveStatus:'idle'
 };
@@ -50,21 +50,21 @@ function classify(){
 }
 function introScreen(){
   const p=state.participant;
-  return `<div class="intro-screen"><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي قصير · 7 أسئلة</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><div class="participant-fields"><label>الاسم<input id="participant-name" data-participant="name" type="text" autocomplete="name" maxlength="100" value="${escapeHtml(p.name)}" placeholder="اكتب اسمك" required></label><label>العمر<input id="participant-age" data-participant="age" type="number" inputmode="numeric" min="1" max="120" value="${escapeHtml(p.age)}" placeholder="العمر بالسنوات" required></label><label>النوع<select id="participant-gender" data-participant="gender" required><option value="">اختر النوع</option><option value="ذكر" ${p.gender==='ذكر'?'selected':''}>ذكر</option><option value="أنثى" ${p.gender==='أنثى'?'selected':''}>أنثى</option><option value="أفضل عدم الإجابة" ${p.gender==='أفضل عدم الإجابة'?'selected':''}>أفضل عدم الإجابة</option></select></label></div><p id="participant-error" class="participant-error" role="alert"></p><button class="primary-button start-button" type="button" data-action="start">ابدأ الفحص <span aria-hidden="true">←</span></button><p class="trust-note">ستُحفظ بياناتك وإجاباتك ونتيجة الفحص في سجل الفحص. هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p></div></div></div>`;
+  return `<div class="intro-screen"><div class="intro-content"><div class="intro-copy"><span class="overline">فحص صيدلي قصير · 7 أسئلة</span><h1>افهم أعراضك<br>بوضوح أكبر</h1><p>أخبرنا بما تشعر به، ثم راجع العلامات مع الصيدلي لتحديد الخطوة المناسبة.</p></div><div class="intro-bottom"><div class="participant-fields"><label>العمر<input id="participant-age" data-participant="age" type="number" inputmode="numeric" min="1" max="120" value="${escapeHtml(p.age)}" placeholder="العمر بالسنوات" required></label><label>النوع<select id="participant-gender" data-participant="gender" required><option value="">اختر النوع</option><option value="ذكر" ${p.gender==='ذكر'?'selected':''}>ذكر</option><option value="أنثى" ${p.gender==='أنثى'?'selected':''}>أنثى</option></select></label></div><p id="participant-error" class="participant-error" role="alert"></p><button class="primary-button start-button" type="button" data-action="start" ${validParticipant()?'':'disabled'}>ابدأ الفحص <span aria-hidden="true">←</span></button><p class="trust-note">ستُحفظ بياناتك وإجاباتك ونتيجة الفحص في سجل الفحص. هذا الفحص يساعدك في الحوار مع الصيدلي، والقرار المهني له.</p></div></div></div>`;
 }
 function escapeHtml(value){
   return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 }
 function validParticipant(){
   const p=state.participant;
-  return p.name.trim().length>=2&&p.name.trim().length<=100&&Number.isInteger(Number(p.age))&&Number(p.age)>=1&&Number(p.age)<=120&&['ذكر','أنثى','أفضل عدم الإجابة'].includes(p.gender);
+  return p.age!==''&&Number.isInteger(Number(p.age))&&Number(p.age)>=1&&Number(p.age)<=120&&['ذكر','أنثى'].includes(p.gender);
 }
 function submissionPayload(){
   const labels=questions.map(q=>{
     const chosen=q.options.find(([value])=>value===state.answers[q.key]);
     return chosen?chosen[1].replace(/<[^>]*>/g,''):'';
   });
-  return {submissionId:state.submissionId,name:state.participant.name.trim(),age:Number(state.participant.age),gender:state.participant.gender,answers:labels,result:classify().title};
+  return {submissionId:state.submissionId,age:Number(state.participant.age),gender:state.participant.gender,answers:labels,result:classify().title};
 }
 async function saveResult(){
   const url=window.QUIZ_SUBMIT_URL;
@@ -155,7 +155,7 @@ screen.addEventListener('click',event=>{
   if(!action)return;
   if(action==='start'){
     if(!validParticipant()){
-      document.getElementById('participant-error').textContent='أدخل الاسم والعمر الصحيح واختر النوع للمتابعة.';
+      document.getElementById('participant-error').textContent='أدخل العمر الصحيح واختر النوع للمتابعة.';
       return;
     }
     state.index=0;
@@ -170,15 +170,16 @@ screen.addEventListener('click',event=>{
   if(action==='details')state.details=true;
   if(action==='summary')state.details=false;
   if(action==='retry'){saveResult();return;}
-  if(action==='reset'){state.index=-1;state.answers=Object.fromEntries(questions.map(q=>[q.key,null]));state.details=false;state.participant={name:'',age:'',gender:''};state.submissionId='';state.saveStatus='idle';}
+  if(action==='reset'){state.index=-1;state.answers=Object.fromEntries(questions.map(q=>[q.key,null]));state.details=false;state.participant={age:'',gender:''};state.submissionId='';state.saveStatus='idle';}
   render();
 });
-screen.addEventListener('input',event=>{
+function updateParticipant(event){
   const field=event.target.dataset.participant;
-  if(field){state.participant[field]=event.target.value;document.getElementById('participant-error').textContent='';}
-});
-screen.addEventListener('change',event=>{
-  const field=event.target.dataset.participant;
-  if(field){state.participant[field]=event.target.value;document.getElementById('participant-error').textContent='';}
-});
+  if(!field)return;
+  state.participant[field]=event.target.value;
+  document.getElementById('participant-error').textContent='';
+  screen.querySelector('[data-action="start"]').disabled=!validParticipant();
+}
+screen.addEventListener('input',updateParticipant);
+screen.addEventListener('change',updateParticipant);
 render();
