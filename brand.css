@@ -14,7 +14,7 @@ html, body {
 }
 
 body {
-  background-image: linear-gradient(90deg, #350039a8, #4800467d), url('assets/brand-background-landscape.jpg');
+  background-image: url('assets/BG_V2.png');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -35,6 +35,43 @@ body {
   box-shadow: none;
 }
 
+.fullscreen-button {
+  position: fixed;
+  z-index: 20;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #ffffff85;
+  border-radius: 11px;
+  background: #501355d9;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 3px 12px #32003366;
+}
+.fullscreen-button:hover { background: #70206f; }
+.fullscreen-button svg { width: 23px; height: 23px; }
+.fullscreen-exit-icon { display: none; }
+.fullscreen-button[aria-pressed="true"] .fullscreen-enter-icon { display: none; }
+.fullscreen-button[aria-pressed="true"] .fullscreen-exit-icon { display: block; }
+.fullscreen-message {
+  position: fixed;
+  z-index: 20;
+  top: max(62px, calc(env(safe-area-inset-top) + 50px));
+  right: max(12px, env(safe-area-inset-right));
+  max-width: min(300px, calc(100vw - 24px));
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #501355;
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 3px 12px #32003366;
+}
+.fullscreen-message:empty { display: none; }
+
 button:focus-visible { outline-color: #ffb347; }
 
 .workspace {
@@ -53,7 +90,7 @@ button:focus-visible { outline-color: #ffb347; }
   box-shadow: none;
 }
 .journey-top {
-  padding: 18px 0 12px;
+  padding: 18px 58px 12px 0;
   background: none;
 }
 .journey-meta, .journey-meta span:last-child { color: #fff; }
@@ -266,9 +303,6 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
 .detail-line.active { background: #ffffff21; }
 
 @media (max-width: 800px) {
-  body {
-    background-image: linear-gradient(180deg, #38003c9c, #51004db5), url('assets/brand-background-portrait.jpg');
-  }
   .app {
     display: grid;
     grid-template-rows: minmax(0, 1fr);
@@ -280,7 +314,7 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
     top: auto;
     left: auto;
     right: auto;
-    padding: 12px 0 10px;
+    padding: 12px 50px 10px 0;
   }
   .screen { height: auto; flex: 1; }
   .intro-screen { min-height: 100%; }
@@ -319,12 +353,6 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
   .detail-line { grid-template-columns: 105px 1fr; font-size: 11px; }
 }
 
-@media (max-width: 800px) and (orientation: landscape) {
-  body {
-    background-image: linear-gradient(90deg, #350039a8, #4800467d), url('assets/brand-background-landscape.jpg');
-  }
-}
-
 @media (max-height: 600px) {
   .intro-content { padding-top: 18px; padding-bottom: 24px; }
   .question-screen, .result-screen, .details-screen { justify-content: flex-start; }
@@ -339,11 +367,11 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
     height: 100vh;
     height: 100dvh;
     padding: 0 18px;
-    background: linear-gradient(180deg, #35003966 0%, #42004733 48%, #35003980 100%), url('assets/brand-background-portrait.jpg') center / cover no-repeat;
+    background: none;
   }
   .workspace, .journey { flex: 1; min-height: 0; height: auto; }
   .journey { display: flex; flex-direction: column; }
-  .journey-top { position: relative; top: auto; flex: none; padding: 18px 2px 12px; }
+  .journey-top { position: relative; top: auto; flex: none; padding: 18px 50px 12px 2px; }
   .screen { flex: 1; min-height: 0; height: auto; overflow-y: auto; }
   .intro-screen, .question-screen, .result-screen, .details-screen {
     display: flex;
@@ -360,7 +388,7 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
     width: 100%;
     min-height: 100%;
     margin: 0;
-    padding: clamp(52px, 9vh, 92px) 2px clamp(28px, 5vh, 48px);
+    padding: clamp(72px, 9vh, 92px) 2px clamp(28px, 5vh, 48px);
     justify-content: space-between;
     gap: 36px;
   }
@@ -382,9 +410,6 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
   .choice.selected, .choices.four .choice.selected, .choices.five .choice.selected { min-height: 58px; padding: 8px 11px; }
   .result-hero h1, .details-hero h1 { font-size: clamp(30px, 8vw, 42px); }
   .result-body, .details-body { gap: 18px; }
-}
-@media (max-width: 800px) and (orientation: landscape) {
-  .app { background-image: linear-gradient(90deg, #35003955, #48004670), url('assets/brand-background-landscape.jpg'); }
 }
 @media (max-width: 360px) {
   .app { padding: 0 14px; }
