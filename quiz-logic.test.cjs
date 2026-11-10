@@ -36,14 +36,15 @@ for (const rule of trackRules) {
   }
 }
 assert.equal(questionKeys.length, 7);
+assert.deepEqual(Array.from(questions.find(question => question.key === 'air').options, ([value]) => value), ['above_100', 'at_or_below_100'], 'AQI has exactly two choices');
 
-const base = { discharge:'none', itch:'no', sneeze:'no', coldSigns:'none', warningSigns:'none', duration:'short', air:'not_high' };
-const allergy = { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', air:'linked_sensitive' };
+const base = { discharge:'none', itch:'no', sneeze:'no', coldSigns:'none', warningSigns:'none', duration:'short', air:'at_or_below_100' };
+const allergy = { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', air:'above_100' };
 const cold = { ...base, discharge:'cloudy', sneeze:'yes', coldSigns:'both', duration:'typical' };
 const referral = { ...base, discharge:'thick', warningSigns:'both', duration:'long' };
 
 for (const [type, answers, hero] of [
-  ['allergy', allergy, 'حساسية تتفاقم بسبب التلوّث'],
+  ['allergy', allergy, 'أعراض حساسية مع مؤشر هواء أعلى من 100'],
   ['cold', cold, 'نزلة برد / عدوى فيروسية'],
   ['referral', referral, 'عدوى (التهاب الجيوب البكتيري) · إحالة']
 ]) {
@@ -51,12 +52,12 @@ for (const [type, answers, hero] of [
   const summary = resultScreen();
   assert(summary.includes(hero), `${type} name appears in the hero`);
   assert(!summary.includes('evidence-list'), `${type} summary has no symptom chips`);
+  assert(!summary.includes('data-action="edit"'), `${type} does not offer result editing`);
   assert(summary.includes('data-action="details"'), `${type} keeps pharmacist details`);
 }
 
-assert.equal(classifyAnswers({ ...allergy, duration:'medium', air:'linked_unhealthy' }).type, 'allergy', 'allergy allows an unspecified non-warning duration');
-assert.equal(classifyAnswers({ ...cold, air:'high_unlinked' }).type, 'cold', 'cold allows high AQI without a symptom link');
-assert.equal(classifyAnswers({ ...referral, air:'linked_sensitive' }).type, 'referral', 'referral still matches when air quality is linked to symptoms');
+assert.equal(classifyAnswers({ ...allergy, duration:'medium' }).type, 'allergy', 'allergy allows an unspecified non-warning duration');
+assert.equal(classifyAnswers({ ...referral, air:'above_100' }).type, 'referral', 'referral still matches with AQI above 100');
 
 for (const [label, answers] of [
   ['allergy plus congestion', { ...allergy, coldSigns:'blocked' }],
@@ -65,12 +66,12 @@ for (const [label, answers] of [
   ['cold with watery rather than cloudy discharge', { ...cold, discharge:'watery' }],
   ['cold with repeated sneezing bouts', { ...cold, sneeze:'bouts' }],
   ['cold plus itching', { ...cold, itch:'yes' }],
-  ['cold with pollution-linked symptoms', { ...cold, air:'linked_sensitive' }],
+  ['cold with AQI above 100', { ...cold, air:'above_100' }],
   ['cold plus fever', { ...cold, warningSigns:'fever' }],
   ['referral plus itching', { ...referral, itch:'yes' }],
   ['referral plus sneezing', { ...referral, sneeze:'yes' }],
   ['referral plus congestion', { ...referral, coldSigns:'blocked' }],
-  ['incomplete allergy', { ...allergy, air:'high_unlinked' }],
+  ['incomplete allergy', { ...allergy, air:'at_or_below_100' }],
   ['incomplete cold', { ...cold, coldSigns:'blocked' }],
   ['incomplete referral', { ...referral, warningSigns:'fever' }],
   ['unanswered question', { ...allergy, air:null }]

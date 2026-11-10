@@ -59,21 +59,22 @@ function completeQuiz(answers) {
   return screen.innerHTML;
 }
 
-const base = { discharge:'none', itch:'no', sneeze:'no', coldSigns:'none', warningSigns:'none', duration:'short', air:'not_high' };
+const base = { discharge:'none', itch:'no', sneeze:'no', coldSigns:'none', warningSigns:'none', duration:'short', air:'at_or_below_100' };
 const cases = [
-  ['Track A with its exact symptoms', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', duration:'medium', air:'linked_sensitive' }, 'أنت في المسار أ'],
-  ['Track B with its exact symptoms', { ...base, discharge:'cloudy', sneeze:'yes', coldSigns:'both', duration:'typical', air:'high_unlinked' }, 'أنت في المسار ب'],
-  ['Track C with its exact symptoms', { ...base, discharge:'thick', warningSigns:'both', duration:'long', air:'unknown' }, 'أنت في المسار ج'],
-  ['Track A with congestion', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', coldSigns:'blocked', air:'linked_sensitive' }, 'مسار غير محدد'],
-  ['Track B with repeated sneezing', { ...base, discharge:'cloudy', sneeze:'bouts', coldSigns:'both', duration:'typical', air:'high_unlinked' }, 'مسار غير محدد'],
-  ['Track C with congestion', { ...base, discharge:'thick', coldSigns:'blocked', warningSigns:'both', duration:'long', air:'unknown' }, 'مسار غير محدد'],
-  ['complete Track A and B mix', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', coldSigns:'both', duration:'typical', air:'linked_sensitive' }, 'مسار غير محدد'],
+  ['Track A with its exact symptoms', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', duration:'medium', air:'above_100' }, 'أنت في المسار أ'],
+  ['Track B with its exact symptoms', { ...base, discharge:'cloudy', sneeze:'yes', coldSigns:'both', duration:'typical' }, 'أنت في المسار ب'],
+  ['Track C with its exact symptoms', { ...base, discharge:'thick', warningSigns:'both', duration:'long', air:'above_100' }, 'أنت في المسار ج'],
+  ['Track A with congestion', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', coldSigns:'blocked', air:'above_100' }, 'مسار غير محدد'],
+  ['Track B with repeated sneezing', { ...base, discharge:'cloudy', sneeze:'bouts', coldSigns:'both', duration:'typical' }, 'مسار غير محدد'],
+  ['Track C with congestion', { ...base, discharge:'thick', coldSigns:'blocked', warningSigns:'both', duration:'long' }, 'مسار غير محدد'],
+  ['complete Track A and B mix', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', coldSigns:'both', duration:'typical', air:'above_100' }, 'مسار غير محدد'],
   ['Track B with a warning sign', { ...base, discharge:'cloudy', sneeze:'yes', coldSigns:'both', warningSigns:'fever', duration:'typical' }, 'مسار غير محدد']
 ];
 
 for (const [label, answers, expected] of cases) {
   const html = completeQuiz(answers);
   assert(html.includes(expected), `${label} should show ${expected}`);
+  assert(!html.includes('data-action="edit"'), `${label} should not show the edit-result button`);
   const payload = submissionPayload();
   assert.equal(payload.age, 30);
   assert.equal(payload.gender, 'ذكر');
