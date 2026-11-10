@@ -54,16 +54,22 @@ for (const [type, answers, hero] of [
   assert(summary.includes('data-action="details"'), `${type} keeps pharmacist details`);
 }
 
-assert.equal(classifyAnswers({ ...allergy, coldSigns:'blocked', duration:'medium', air:'linked_unhealthy' }).type, 'allergy', 'allergy ignores unrelated congestion and duration');
-assert.equal(classifyAnswers({ ...cold, air:'high_unlinked' }).type, 'cold', 'cold ignores unrelated air answers');
-assert.equal(classifyAnswers({ ...cold, discharge:'watery', sneeze:'bouts' }).type, 'cold', 'cold accepts clear discharge and either sneezing choice');
-assert.equal(classifyAnswers({ ...cold, itch:'yes' }).type, 'cold', 'cold does not fail on an isolated unrelated answer');
-assert.equal(classifyAnswers({ ...referral, coldSigns:'both', itch:'yes', air:'linked_sensitive' }).type, 'referral', 'referral ignores unrelated symptoms and air answers');
+assert.equal(classifyAnswers({ ...allergy, duration:'medium', air:'linked_unhealthy' }).type, 'allergy', 'allergy allows an unspecified non-warning duration');
+assert.equal(classifyAnswers({ ...cold, air:'high_unlinked' }).type, 'cold', 'cold allows high AQI without a symptom link');
+assert.equal(classifyAnswers({ ...referral, air:'linked_sensitive' }).type, 'referral', 'referral still matches when air quality is linked to symptoms');
 
 for (const [label, answers] of [
-  ['complete allergy and cold tracks', { ...allergy, coldSigns:'both', duration:'typical' }],
+  ['allergy plus congestion', { ...allergy, coldSigns:'blocked' }],
+  ['allergy plus mild malaise', { ...allergy, coldSigns:'malaise' }],
   ['allergy plus facial pain', { ...allergy, warningSigns:'pain' }],
+  ['cold with watery rather than cloudy discharge', { ...cold, discharge:'watery' }],
+  ['cold with repeated sneezing bouts', { ...cold, sneeze:'bouts' }],
+  ['cold plus itching', { ...cold, itch:'yes' }],
+  ['cold with pollution-linked symptoms', { ...cold, air:'linked_sensitive' }],
   ['cold plus fever', { ...cold, warningSigns:'fever' }],
+  ['referral plus itching', { ...referral, itch:'yes' }],
+  ['referral plus sneezing', { ...referral, sneeze:'yes' }],
+  ['referral plus congestion', { ...referral, coldSigns:'blocked' }],
   ['incomplete allergy', { ...allergy, air:'high_unlinked' }],
   ['incomplete cold', { ...cold, coldSigns:'blocked' }],
   ['incomplete referral', { ...referral, warningSigns:'fever' }],
@@ -77,4 +83,4 @@ assert(undefinedSummary.includes('لم يُحدَّد مسار'), 'undefined tit
 assert(!undefinedSummary.includes('evidence-list'), 'undefined summary has no symptom chips');
 assert(undefinedSummary.includes('data-action="details"'), 'undefined summary keeps pharmacist details');
 
-console.log('Checked three track rules, unrelated answers, mixed signs, incomplete answers, and result heroes.');
+console.log('Checked three exact symptom patterns, mixed signs, incomplete answers, and result heroes.');

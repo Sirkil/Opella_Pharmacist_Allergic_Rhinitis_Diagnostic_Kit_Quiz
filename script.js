@@ -27,9 +27,9 @@ function safetyFlags(){
   return flags;
 }
 const trackRules=[
-  {type:'allergy',required:{discharge:'watery',itch:'yes',sneeze:'bouts',warningSigns:'none',air:['linked_sensitive','linked_unhealthy']}},
-  {type:'cold',required:{discharge:['watery','cloudy'],sneeze:['yes','bouts'],coldSigns:'both',duration:'typical'}},
-  {type:'referral',required:{discharge:'thick',warningSigns:'both',duration:'long'}}
+  {type:'allergy',required:{discharge:'watery',itch:'yes',sneeze:'bouts',coldSigns:'none',warningSigns:'none',air:['linked_sensitive','linked_unhealthy']}},
+  {type:'cold',required:{discharge:'cloudy',itch:'no',sneeze:'yes',coldSigns:'both',warningSigns:'none',duration:'typical',air:['high_unlinked','not_high']}},
+  {type:'referral',required:{discharge:'thick',itch:'no',sneeze:'no',coldSigns:'none',warningSigns:'both',duration:'long'}}
 ];
 function matchesTrack(rule,a){
   return Object.entries(rule.required).every(([key,value])=>Array.isArray(value)?value.includes(a[key]):a[key]===value);
@@ -45,8 +45,8 @@ function classify(){
   if(matched.length!==1)return review('لا تكتمل شروط مسار واحد أو تظهر علامات من مسارات مختلفة.');
   if(matched[0].type!=='referral'&&safetyFlags().length)return review('توجد علامة تستدعي المراجعة مع إجابات مسار آخر.');
   if(matched[0].type==='referral')return {type:'referral',tag:'أنت في المسار ج',title:'عدوى (التهاب الجيوب البكتيري) · إحالة',summary:'هذا اسم المسار في الدليل، وليس تشخيصًا. تطابقت علامات الإحالة الأربع ويحتاج تحديد السبب إلى تقييم مهني.',evidence:safetyFlags(),next:'اعرض هذه العلامات على الصيدلي لتقييم الحاجة إلى الإحالة للطبيب أو الأخصائي.',reason:'اجتمعت الحمى والإفرازات السميكة وألم الوجه واستمرار الأعراض لأكثر من 14 يومًا. هذه النتيجة لا تشخّص عدوى بكتيرية.'};
-  if(matched[0].type==='allergy')return {type:'allergy',tag:'أنت في المسار أ',title:'حساسية تتفاقم بسبب التلوّث',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['سيلان أنف مائي وشفاف','حكّة','نوبات عطس متتالية','مؤشر الهواء أعلى من 100','ارتباط ملحوظ بجودة الهواء'],next:'اسأل الصيدلي عن تقليل التعرض للمحفزات والعناية المناسبة للحساسية.',reason:'اجتمعت الإفرازات المائية والحكّة ونوبات العطس وعدم وجود حمّى ومؤشر هواء أعلى من 100 وارتباط الأعراض بالتلوّث. بقية الإجابات لا تغيّر المسار ما لم تكتمل شروط مسار آخر أو تظهر علامة إنذار.'};
-  return {type:'cold',tag:'أنت في المسار ب',title:'نزلة برد / عدوى فيروسية',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['إفرازات شفافة إلى معكّرة قليلًا','عطس','احتقان','توعّك خفيف','مدة من 7 إلى 10 أيام'],next:'ناقش مع الصيدلي طرق تخفيف الأعراض ومتى تحتاج إلى رعاية إضافية.',reason:'اجتمعت الإفرازات الشفافة إلى المعكّرة قليلًا والعطس والاحتقان والتوعّك ومدة من 7 إلى 10 أيام. بقية الإجابات لا تغيّر المسار ما لم تكتمل شروط مسار آخر أو تظهر علامة إنذار.'};
+  if(matched[0].type==='allergy')return {type:'allergy',tag:'أنت في المسار أ',title:'حساسية تتفاقم بسبب التلوّث',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['سيلان أنف مائي وشفاف','حكّة','نوبات عطس متتالية','مؤشر الهواء أعلى من 100','ارتباط ملحوظ بجودة الهواء'],next:'اسأل الصيدلي عن تقليل التعرض للمحفزات والعناية المناسبة للحساسية.',reason:'اجتمعت الإفرازات المائية والحكّة ونوبات العطس وعدم وجود احتقان أو توعّك أو حمّى أو ألم بالوجه، مع مؤشر هواء أعلى من 100 وارتباط الأعراض بالتلوّث.'};
+  return {type:'cold',tag:'أنت في المسار ب',title:'نزلة برد / عدوى فيروسية',summary:'اكتملت شروط هذا المسار دون اكتمال مسار آخر أو وجود علامات إنذار.',evidence:['إفرازات شفافة إلى معكّرة قليلًا','عطس','احتقان','توعّك خفيف','مدة من 7 إلى 10 أيام'],next:'ناقش مع الصيدلي طرق تخفيف الأعراض ومتى تحتاج إلى رعاية إضافية.',reason:'اجتمعت الإفرازات الشفافة إلى المعكّرة قليلًا والعطس والاحتقان والتوعّك ومدة من 7 إلى 10 أيام، دون حكّة أو نوبات عطس متتالية أو حمّى أو ألم بالوجه أو ارتباط الأعراض بالتلوّث.'};
 }
 function introScreen(){
   const p=state.participant;

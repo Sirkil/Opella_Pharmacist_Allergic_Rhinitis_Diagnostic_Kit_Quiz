@@ -61,9 +61,12 @@ function completeQuiz(answers) {
 
 const base = { discharge:'none', itch:'no', sneeze:'no', coldSigns:'none', warningSigns:'none', duration:'short', air:'not_high' };
 const cases = [
-  ['Track A with unrelated congestion and duration', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', coldSigns:'blocked', duration:'medium', air:'linked_sensitive' }, 'أنت في المسار أ'],
-  ['Track B with repeated sneezing and high AQI', { ...base, discharge:'cloudy', sneeze:'bouts', coldSigns:'both', duration:'typical', air:'high_unlinked' }, 'أنت في المسار ب'],
-  ['Track C with congestion', { ...base, discharge:'thick', coldSigns:'blocked', warningSigns:'both', duration:'long', air:'unknown' }, 'أنت في المسار ج'],
+  ['Track A with its exact symptoms', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', duration:'medium', air:'linked_sensitive' }, 'أنت في المسار أ'],
+  ['Track B with its exact symptoms', { ...base, discharge:'cloudy', sneeze:'yes', coldSigns:'both', duration:'typical', air:'high_unlinked' }, 'أنت في المسار ب'],
+  ['Track C with its exact symptoms', { ...base, discharge:'thick', warningSigns:'both', duration:'long', air:'unknown' }, 'أنت في المسار ج'],
+  ['Track A with congestion', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', coldSigns:'blocked', air:'linked_sensitive' }, 'مسار غير محدد'],
+  ['Track B with repeated sneezing', { ...base, discharge:'cloudy', sneeze:'bouts', coldSigns:'both', duration:'typical', air:'high_unlinked' }, 'مسار غير محدد'],
+  ['Track C with congestion', { ...base, discharge:'thick', coldSigns:'blocked', warningSigns:'both', duration:'long', air:'unknown' }, 'مسار غير محدد'],
   ['complete Track A and B mix', { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', coldSigns:'both', duration:'typical', air:'linked_sensitive' }, 'مسار غير محدد'],
   ['Track B with a warning sign', { ...base, discharge:'cloudy', sneeze:'yes', coldSigns:'both', warningSigns:'fever', duration:'typical' }, 'مسار غير محدد']
 ];
@@ -78,4 +81,4 @@ for (const [label, answers, expected] of cases) {
   assert(!Object.hasOwn(payload, 'name'));
 }
 
-console.log('Clicked through all seven questions for Tracks A, B, C, and two undefined cases.');
+console.log('Clicked through all seven questions for exact Tracks A, B, C, and mixed cases.');
