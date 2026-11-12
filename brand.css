@@ -89,15 +89,6 @@ button:focus-visible { outline-color: #ffb347; }
   background: none;
   box-shadow: none;
 }
-.journey-top {
-  padding: 18px 58px 12px 0;
-  background: none;
-}
-.journey-meta, .journey-meta span:last-child { color: #fff; }
-.journey-meta { font-size: 12px; }
-.progress-track { height: 5px; gap: 5px; }
-.progress-track span { background: #ffffff5c; }
-.progress-track span.current, .progress-track span.complete { background: #ff9d24; }
 .screen { flex: 1; overflow-y: auto; scrollbar-width: thin; }
 .screen > div { height: auto; min-height: 100%; }
 .overline { color: #ffc276; font-size: 12px; }
@@ -309,13 +300,6 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
     padding: 0 18px;
   }
   .workspace, .journey { height: 100%; }
-  .journey-top {
-    position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    padding: 12px 50px 10px 0;
-  }
   .screen { height: auto; flex: 1; }
   .intro-screen { min-height: 100%; }
   .intro-content { padding: 34px 0 58px; gap: 36px; }
@@ -371,7 +355,6 @@ html[lang="ar"] .result-screen, html[lang="ar"] .details-screen { grid-template-
   }
   .workspace, .journey { flex: 1; min-height: 0; height: auto; }
   .journey { display: flex; flex-direction: column; }
-  .journey-top { position: relative; top: auto; flex: none; padding: 18px 50px 12px 2px; }
   .screen { flex: 1; min-height: 0; height: auto; overflow-y: auto; }
   .intro-screen, .question-screen, .result-screen, .details-screen {
     display: flex;

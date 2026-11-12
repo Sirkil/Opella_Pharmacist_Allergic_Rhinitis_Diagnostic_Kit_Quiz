@@ -4,84 +4,37 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const elements = new Map();
-const document = {
-  getElementById(id) {
-    if (!elements.has(id)) elements.set(id, {
-      classList: { toggle() {} },
-      addEventListener() {},
-      innerHTML: '',
-      textContent: ''
-    });
-    return elements.get(id);
-  }
-};
-const context = vm.createContext({ document });
+const document = { getElementById(id) {
+  if (!elements.has(id)) elements.set(id, {classList:{toggle(){}},addEventListener(){},innerHTML:'',textContent:''});
+  return elements.get(id);
+}};
 const source = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
-vm.runInContext(`${source}\nglobalThis.quizLogic = { questions, state, trackRules, classify, resultScreen };`, context);
-const { questions, state, trackRules, classify, resultScreen } = context.quizLogic;
-const questionKeys = questions.map(question => question.key);
+const context = vm.createContext({document});
+vm.runInContext(`${source}\nglobalThis.quiz = {questions, state, results, classify};`, context);
+const {questions, state, results, classify} = context.quiz;
 
-function classifyAnswers(answers) {
-  state.answers = { ...answers };
-  return classify();
-}
-
-for (const rule of trackRules) {
-  for (const [key, accepted] of Object.entries(rule.required)) {
-    const question = questions.find(item => item.key === key);
-    assert(question, `${rule.type} references a real question: ${key}`);
-    for (const value of Array.isArray(accepted) ? accepted : [accepted]) {
-      assert(question.options.some(([option]) => option === value), `${rule.type} has an available choice for ${key}=${value}`);
-    }
+assert.equal(questions.length, 5);
+assert.deepEqual(Array.from(questions, q=>q.key), ['fever','beyondNose','discharge','allergySigns','air']);
+for (const question of questions) {
+  assert.equal(question.options.length, 2);
+  for (const [value] of question.options) {
+    assert(question.routes[value], `${question.key}/${value} has a route`);
+    assert(questions.some(q=>q.key===question.routes[value]) || results[question.routes[value]], `${question.key}/${value} points to a valid step or result`);
   }
 }
-assert.equal(questionKeys.length, 7);
-assert.deepEqual(Array.from(questions.find(question => question.key === 'air').options, ([value]) => value), ['above_100', 'at_or_below_100'], 'AQI has exactly two choices');
 
-const base = { discharge:'none', itch:'no', sneeze:'no', coldSigns:'none', warningSigns:'none', duration:'short', air:'at_or_below_100' };
-const allergy = { ...base, discharge:'watery', itch:'yes', sneeze:'bouts', air:'above_100' };
-const cold = { ...base, discharge:'cloudy', sneeze:'yes', coldSigns:'both', duration:'typical' };
-const referral = { ...base, discharge:'thick', warningSigns:'both', duration:'long' };
-
-for (const [type, answers, hero] of [
-  ['allergy', allergy, 'أعراض حساسية مع مؤشر هواء أعلى من 100'],
-  ['cold', cold, 'نزلة برد / عدوى فيروسية'],
-  ['referral', referral, 'عدوى (التهاب الجيوب البكتيري) · إحالة']
-]) {
-  assert.equal(classifyAnswers(answers).type, type, `${type} defining signs`);
-  const summary = resultScreen();
-  assert(summary.includes(hero), `${type} name appears in the hero`);
-  assert(!summary.includes('evidence-list'), `${type} summary has no symptom chips`);
-  assert(!summary.includes('data-action="edit"'), `${type} does not offer result editing`);
-  assert(summary.includes('data-action="details"'), `${type} keeps pharmacist details`);
+const cases = [
+  [{fever:'yes',beyondNose:'yes'},'flu'],
+  [{fever:'yes',beyondNose:'no'},'cold'],
+  [{fever:'no',discharge:'thick'},'cold'],
+  [{fever:'no',discharge:'watery',allergySigns:'no'},'otherRhinitis'],
+  [{fever:'no',discharge:'watery',allergySigns:'yes',air:'yes'},'pollutionAllergy'],
+  [{fever:'no',discharge:'watery',allergySigns:'yes',air:'no'},'otherAllergy']
+];
+for (const [answers, expected] of cases) {
+  state.answers = Object.assign(Object.fromEntries(questions.map(q=>[q.key,null])), answers);
+  assert.equal(classify().type, expected, JSON.stringify(answers));
 }
-
-assert.equal(classifyAnswers({ ...allergy, duration:'medium' }).type, 'allergy', 'allergy allows an unspecified non-warning duration');
-assert.equal(classifyAnswers({ ...referral, air:'above_100' }).type, 'referral', 'referral still matches with AQI above 100');
-
-for (const [label, answers] of [
-  ['allergy plus congestion', { ...allergy, coldSigns:'blocked' }],
-  ['allergy plus mild malaise', { ...allergy, coldSigns:'malaise' }],
-  ['allergy plus facial pain', { ...allergy, warningSigns:'pain' }],
-  ['cold with watery rather than cloudy discharge', { ...cold, discharge:'watery' }],
-  ['cold with repeated sneezing bouts', { ...cold, sneeze:'bouts' }],
-  ['cold plus itching', { ...cold, itch:'yes' }],
-  ['cold with AQI above 100', { ...cold, air:'above_100' }],
-  ['cold plus fever', { ...cold, warningSigns:'fever' }],
-  ['referral plus itching', { ...referral, itch:'yes' }],
-  ['referral plus sneezing', { ...referral, sneeze:'yes' }],
-  ['referral plus congestion', { ...referral, coldSigns:'blocked' }],
-  ['incomplete allergy', { ...allergy, air:'at_or_below_100' }],
-  ['incomplete cold', { ...cold, coldSigns:'blocked' }],
-  ['incomplete referral', { ...referral, warningSigns:'fever' }],
-  ['unanswered question', { ...allergy, air:null }]
-]) {
-  assert.equal(classifyAnswers(answers).type, 'review', label);
-}
-
-const undefinedSummary = resultScreen();
-assert(undefinedSummary.includes('لم يُحدَّد مسار'), 'undefined title appears in the hero');
-assert(!undefinedSummary.includes('evidence-list'), 'undefined summary has no symptom chips');
-assert(undefinedSummary.includes('data-action="details"'), 'undefined summary keeps pharmacist details');
-
-console.log('Checked three exact symptom patterns, mixed signs, incomplete answers, and result heroes.');
+state.answers = {fever:'no',beyondNose:null,discharge:'watery',allergySigns:'yes',air:null};
+assert.equal(classify(), null, 'an incomplete route has no result');
+console.log('Checked every branch and incomplete routes.');

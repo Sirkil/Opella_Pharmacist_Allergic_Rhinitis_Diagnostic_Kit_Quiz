@@ -1,13 +1,22 @@
-# Seven-question quiz and track rules
+# Interactive pharmacy diagnostic flow
 
-The quiz asks about nasal discharge, itching, sneezing, congestion with mild malaise, fever with facial pain, duration, and AQI. The final question has exactly two choices: above 100 or 100 and below. A reading of exactly 100 belongs to the latter choice.
+The Arabic quiz implements the five steps supplied on 2026-11-12. Only questions on the chosen branch appear.
 
-| Track shown in result hero | Defining answers |
-| --- | --- |
-| **المسار أ — أعراض حساسية مع مؤشر هواء أعلى من 100** | Watery clear discharge, itching, repeated sneezing bouts, **no congestion or mild malaise**, no fever or facial pain, and AQI above 100. The deck does not set a duration for this path; a duration over 14 days triggers review. The result does not claim that AQI caused the symptoms. |
-| **المسار ب — نزلة برد / عدوى فيروسية** | Clear to slightly cloudy discharge, sneezing **without repeated bouts**, both congestion and mild malaise, **no itching, fever, or facial pain**, symptoms for 7–10 days, and AQI 100 or below. |
-| **المسار ج — عدوى (التهاب الجيوب البكتيري) · إحالة** | Thick yellow or green discharge, both fever and facial pain, symptoms for more than 14 days, and **no itching, sneezing, congestion, or mild malaise**. Either AQI choice is accepted. This is a track name from the supplied deck, not an automated diagnosis. |
+| Step | Answer | Next |
+| --- | --- | --- |
+| Q1 Fever | Yes | Q2 |
+| Q1 Fever | No | Q3 |
+| Q2 Symptoms beyond nose and throat | Yes | Likely flu |
+| Q2 Symptoms beyond nose and throat | No | Possible common cold |
+| Q3 Nasal discharge | Thick/yellowish | Possible common cold |
+| Q3 Nasal discharge | Thin/clear/watery | Q4 |
+| Q4 Sneezing, nasal itching, or itchy/watery eyes | Yes | Q5 |
+| Q4 Sneezing, nasal itching, or itchy/watery eyes | No | Other causes of rhinitis; further assessment |
+| Q5 Air pollution currently high | Yes | Allergic rhinitis with high air pollution |
+| Q5 Air pollution currently high | No | Allergic rhinitis; other potential triggers |
 
-Every question must be answered before the result appears. An off-path symptom prevents an exact match and gives **مسار غير محدد**. A warning sign with Track A or B also gives **مسار غير محدد** and asks for pharmacist review. Track C requires all four warning signs and the negative answers listed above.
+The result screen gives the supplied recommendations for flu, cold, and the pollution path. The supplied text left the fourth recommendation blank, so the quiz gives only general pharmacist guidance for other potential triggers. The additional rhinitis result advises further assessment.
 
-The supplied deck does not explicitly specify every negative answer. The Yes/No exclusions above implement the requested path-specific matching. The deck's original Path A label refers to pollution worsening symptoms, but the simplified AQI question does not collect that relationship. A result with no completed track still shows warning signs in its pharmacist guidance when present. The result screen has no answer-editing button.
+The air pollution answer does not establish that pollution caused the person's symptoms. The Fexofenadine statement summarizes a clinical trial in a controlled exposure setting; suitability for an individual requires pharmacist review. See https://pubmed.ncbi.nlm.nih.gov/33834054/.
+
+For compatibility with the currently deployed Apps Script, every submission still contains seven non-empty legacy answer values: the five self-labeled new answers and two clearly marked unused placeholders. It also carries `schemaVersion: 2` and the five clean `answersV2` values. Questions skipped by branching are recorded as “لم يُطرح”. The updated local `Code.gs` writes version 2 entries to the separate **Diagnostic Flow v2** tab and still accepts historical seven-question submissions in `Sheet1`. It looks up submission IDs in column I for version 2 and column K for legacy entries. This Apps Script file is excluded by `.gitignore`, so it must be copied and redeployed separately. Until then, the deployed version saves self-labeled answers under the old Sheet1 headings.
